@@ -1,5 +1,5 @@
 # apiTest
-该接口自动化平台是基于对httprunner的封装开发，核心模块是httprunner 2.2.6 ,有支持httprunner的env,api，批量生成用例，报告导出成excel，导入用例或者api，定时执行等功能
+该接口自动化平台是基于对httprunner的封装开发，核心模块是httprunner 2.2.6 ,有支持httprunner的env,api，批量生成用例，报告导出成excel，导入用例或者api，定时执行，账号数据权限独立（看不到别人账号的数据）等功能
 
                 接口测试自动化平台部署
                 
@@ -69,5 +69,10 @@
     十、浏览器输入：http://ip地址/Login/login/
 
     十一、如果要提升性能，uwsgi+nginx部署参考：https://www.jianshu.com/p/d6f9138fab7b
+    
+    
+欢迎加群交流
+         群名称：接口自动化平台交流群
+        群   号：1044894017
 
 
