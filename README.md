@@ -70,6 +70,8 @@
 
     十一、如果要提升性能，uwsgi+nginx部署参考：https://www.jianshu.com/p/d6f9138fab7b
     
+    十二、在线展示 http://129.204.215.114:88/Login/login/
+    
     
 欢迎加群交流
          群名称：接口自动化平台交流群
