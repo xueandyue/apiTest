@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+{% block title %}Edit Suite{% endblock %}
+{% load staticfiles %}
+{% load custom_tags %}
+{% block content %}
+<div class="am-modal am-modal-confirm" tabindex="-1" id="select_config" style="top: 20%;">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">可选配置</div>
+            <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+                <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择项目:</label>
+                <div class="col-sm-8">
+                    <select class="form-control" id="select_config_project">
+                        <option value="请选择">请选择</option>
+                        {% for foo in project %}
+                        <option value="{{ foo.project_name }}">{{ foo.project_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+    
+            </div>
+    
+            <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+                <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择模块:</label>
+                <div class="col-sm-8">
+                    <select class="form-control" id="select_config_moudle">
+                    </select>
+                </div>
+    
+            </div>
+            <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+                <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择配置:</label>
+                <div class="col-sm-8">
+                    <select class="form-control" id="select_config_config">
+                    </select>
+                </div>
+    
+            </div>
+    
+    
+    
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" id="select_config_confirm">确定</span>
+            </div>
+        </div>
+    </div>
+    <div class=" admin-content">
+
+        <div class="admin-biaogelist">
+
+            <div style="margin-top: 20px">
+                <div style="float: left; width: 40%; height: auto">
+                    <form class="form-horizontal" id="form_message">
+
+                        <div class="form-group">
+                            <div class="input-group col-md-10 col-md-offset-1">
+                                <div class="input-group-addon" style="color: #0a628f">项目列表</div>
+                                <select id='belong_project' name="project" class="form-control"
+                                        onchange="auto_load('#form_message', '{{ADD_CASE_URL}}/', '#belong_module_id', 'module')
+                                        auto_load('#form_message', '{{ADD_CASE_URL}}/', '#belong_case_id', 'case')">
+                                    <option value="{{ info.belong_project.project_name }}">{{ info.belong_project.project_name }}</option>
+                                    {% for foo in project %}
+                                        {% if info.belong_project.project_name != foo.project_name %}
+                                            <option value="{{ foo.project_name }}">{{ foo.project_name }}</option>
+                                        {% endif %}
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group col-md-10 col-md-offset-1">
+                                <div class="input-group-addon" style="color: #0a628f">模块列表</div>
+                                <select id="belong_module_id" name="module" class="form-control"
+                                        onchange="auto_load('#form_message', '{{ADD_CASE_URL}}/', '#belong_case_id', 'case')">
+                                        <option value="{{ info.belong_module.id }}"
+                                        selected>{{ info.belong_module.module_name }}</option>
+                                {% for obj in module %}
+                                    {% ifnotequal info.belong_module.module_name obj.module_name %}
+                                        <option value='{{ obj.id }}'>{{ obj.module_name }}</option>
+                                    {% endifnotequal %}
+                                {% endfor %}
+                                <option value="请选择">请选择</option>
+                                </select>
+
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                                <div class="input-group col-md-10 col-md-offset-1" id="config_div">
+                                    <div class="input-group-addon" style="color: #0a628f">可选配置</div>
+                                    <input type="text" value="点击选择" class="form-control" id="config_iput" />
+                                    <select id="config" name="config" class="form-control" style="display: none;">
+                                    </select>
+                                </div>
+                            </div>
+
+  
+                        <div class="form-group">
+                            <div class="input-group col-md-10 col-md-offset-1">
+                                <div class="input-group-addon" style="color: #0a628f">用例列表</div>
+                                <select multiple="multiple" size="25" id="belong_case_id" name="include"
+                                        class="form-control">
+                                </select>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+
+                <button id="add_to_right" style="margin-left: 4%; display: inline-block; margin-bottom: -50%">>>
+                </button>
+                <div id="right" style="float: right; width: 50%; margin-right: 1%;">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Suite</div>
+                                <input type="text" name="suite_name" value="{{ info.suite_name }}" class="form-control"
+                                       id="suite_name"
+                                       placeholder="Suite Name">
+                            </div>
+                        </div>
+                        <button id="create_suite" type="button" class="btn btn-primary">Save Suite</button>
+                    </form>
+                    <nav>
+                        <ol id="pre_case">
+                            {% for path in info.include|convert_eval %}
+                                <li style="margin-left:15px" id="test_{{ path.0 }}">
+                                    <a style="font-size: 20px" href="/Index/edit_case/{{ path.0 }}/"
+                                       id="{{ path.0 }}">{{ path.1 }}</a><i
+                                        class="js-remove" onclick="remove_self('#test_{{ path.0 }}')">✖</i></li>
+                            {% endfor %}
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        $(function () {
+            $("#pre_case").sortable();
+            $("#pre_case").disableSelection();
+        });
+
+
+        $('#add_to_right').on('click', function () {
+            var include = $('#belong_case_id').val();
+            for (var key in include) {
+                var case_id = include[key];
+                var case_name = $('#belong_case_id option[value="' + include[key] + '"]').text();
+                if (case_name !== '请选择') {
+                    var href = "<li style='margin-left:15px' id=" + case_id + ">" +
+                        "<a style='font-size: 20px' href='/Index/edit_case/" + case_id + "/' id = " + case_id + ">test：" + case_name + "" +
+                        "</a><i class=\"js-remove\" onclick=remove_self('#" + case_id + "')>✖</i></li>";
+                    $("#pre_case").append(href);
+                }
+
+            }
+
+        });
+
+        $('#create_suite').on('click', function () {
+            var test_length = $('#pre_case li').length;
+            if ($('#suite_name').val() === '') {
+                myAlert('大虾，Suite Name不能为空啊');
+                return
+            }
+            if (test_length === 0) {
+                myAlert('大虾，是不是忘记添加用例啦');
+                return
+            }
+            var include = [];
+            var i = 0;
+            $("#pre_case li a").each(function () {
+                include[i++] = [$(this).attr('id'), $(this).text()];
+            });
+            const suite = {
+                'project': $("#belong_project option:selected").val(),
+                'include': include,
+                'suite_name': $('#suite_name').val(),
+                'id': {{ info.id }}
+            };
+            $.ajax({
+                type: 'post',
+                url: '/Index/edit_suite/',
+                data: JSON.stringify(suite),
+                contentType: "application/json",
+                success: function (data) {
+                    if (data === 'session invalid') {
+                        window.location.href = "/Index/login/";
+                    } else {
+                        if (data.indexOf('/Index/') != -1) {
+                            window.location.href = data;
+                        } else {
+                            myAlert(data);
+                        }
+                    }
+                },
+                error: function () {
+                    myAlert('Sorry，服务器可能开小差啦, 请重试!');
+                }
+            });
+
+        });
+
+        function remove_self(id) {
+            $(id).remove();
+        }
+    </script>
+<script>
+        $(document).ready(function () {
+    
+            function project_change(project_id, module_id, url) {
+    
+                var temp_project = $.trim($(project_id).val());
+                var data = { "test": { "name": { "project": temp_project }, "type": "module" } };
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    success: function (data) {
+                        module_info = data.split('replaceFlag');
+                        var a = $(module_id);
+                        a.empty();
+                        for (var i = 0; i < module_info.length; i++) {
+                            if (module_info[i] !== "") {
+                                var value = module_info[i].split('^=');
+                                a.prepend("<option value='" + value[0] + "' >" + value[1] + "</option>")
+                            }
+                        }
+                        a.prepend("<option value='请选择' selected>请选择</option>");
+                    }
+                    ,
+                    error: function () {
+                        myAlert('Sorry，服务器可能开小差啦, 请重试!');
+                    }
+                });
+    
+    
+    
+            }
+    
+            function module_change(project_id, module_id, case_id, url, type) {
+                var temp_project = $.trim($(project_id).val());
+                var temp_module = $.trim($(module_id).val());
+                var data = { "test": { "name": { "project": temp_project, "module": temp_module }, "type": type } };
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    success: function (data) {
+                        case_info = data.split('replaceFlag');
+                        var a = $(case_id);
+                        var b = "";
+                        if (type == "case") {
+                            b = $("#belong_case_id");
+    
+                        } else {
+    
+                            b = $("#config");
+                        }
+                        a.empty();
+                        b.empty();
+                        for (var i = 0; i < case_info.length; i++) {
+                            if (case_info[i] !== "") {
+                                var value = case_info[i].split('^=');
+                                a.prepend("<option value='" + value[0] + "' >" + value[1] + "</option>")
+                                b.prepend("<option value='" + value[0] + "' >" + value[1] + "</option>")
+                            }
+                        }
+                        a.prepend("<option value='请选择' selected>请选择</option>");
+                        b.prepend("<option value='请选择' selected>请选择</option>");
+    
+    
+                    }
+                    ,
+                    error: function () {
+                        myAlert('Sorry，服务器可能开小差啦, 请重试!');
+                    }
+                });
+    
+    
+    
+            }
+    
+    
+            $('#config_div').on('click', function () {
+                $('#select_config').modal({
+                    relatedTarget: this,
+                    onConfirm: function () {
+    
+    
+                    },
+                    onCancel: function () {
+    
+    
+                    }
+                });
+            });
+    
+            $("#select_config_project").change(function () {
+    
+                project_change("#select_config_project", "#select_config_moudle", "/Index/add_case/");
+    
+    
+            });
+    
+            $("#select_config_moudle").change(function () {
+    
+                module_change("#select_config_project", "#select_config_moudle", "#select_config_config", "/Index/add_case/", "config");
+    
+    
+            });
+            $("#select_config_confirm").click(function () {
+    
+                var temp = $("#config").find("option:selected").text();
+                $("#config_iput").val(temp);
+    
+    
+    
+                if ($('#config').val() !== '请选择') {
+                    var case_id = $('#config').val();
+                    var case_name = $('#config option:selected').text();
+                }
+    
+                $("#select_env").show();
+    
+    
+            });
+    
+            $("#select_config_config").change(function () {
+                var id = $("#select_config_config").val();
+                var temp = $("#select_config_config").find("option:selected").text();
+                $('#config option:selected').text(temp);
+                $('#config').val(id);
+    
+    
+            })
+    
+        });
+    
+    </script>
+
+{% endblock %}

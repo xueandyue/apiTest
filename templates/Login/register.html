@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <!-- /.website title -->
+    <title>注 册</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    {% load staticfiles %}
+    <!-- CSS Files -->
+    <link href="{% static 'cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css' %}" rel="stylesheet" media="screen" />
+    <!-- Colors -->
+    <link href="{% static "/assets/css/css-index.css" %}" rel="stylesheet" media="screen">
+    <link href="{% static 'cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.css' %}" rel="stylesheet">
+
+    <style>
+        .has-error .checkbox,
+        .has-error .checkbox-inline,
+        .has-error .control-label,
+        .has-error .help-block,
+        .has-error .radio,
+        .has-error .radio-inline,
+        .has-error.checkbox label,
+        .has-error.checkbox-inline label,
+        .has-error.radio label,
+        .has-error.radio-inline label {
+            color: limegreen;
+        }
+    </style>
+    <style>
+        #my-alert1,
+        #my-alert11 {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.6rem;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+            position: fixed;
+            z-index: 1110;
+            left: 50%;
+            margin-top: 0;
+            top: 50%;
+            text-align: center;
+            border-radius: 2px;
+            transition-property: transform, opacity;
+            width: 540px;
+            margin-left: -270px;
+            opacity: 1;
+            transition-duration: 300ms;
+            transform: translate3d(0, 0, 0) scale(1);
+            display: block;
+        }
+
+        #my-alert2,
+        #my-alert21 {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.6rem;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            text-align: center;
+            box-sizing: border-box;
+            border-radius: 2px;
+            background: #f8f8f8;
+
+        }
+
+        #my-alert3,
+        #my-alert31 {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            text-align: center;
+            box-sizing: border-box;
+            padding: 15px 10px 5px 10px;
+            font-size: 1.8rem;
+            font-weight: 500;
+
+        }
+
+        #my-alert4,
+        #my-alert41 {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.6rem;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+            padding: 15px 10px;
+            text-align: center;
+            border-bottom: 1px solid #dedede;
+            border-radius: 2px 2px 0 0;
+            padding-top: 0;
+
+        }
+
+        #my-alert5,
+        #my-alert51 {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.6rem;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            text-align: center;
+            box-sizing: border-box;
+            height: 44px;
+            overflow: hidden;
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
+
+        }
+
+        #my-alert6,
+        #my-alert61 {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            border-collapse: collapse;
+            display: table-cell !important;
+            padding: 0 5px;
+            height: 44px;
+            box-sizing: border-box !important;
+            font-size: 1.6rem;
+            line-height: 44px;
+            text-align: center;
+            color: #0e90d2;
+            word-wrap: normal;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            cursor: pointer;
+            border-right: none;
+            border-radius: 0 0 2px 2px;
+
+        }
+
+        #my-alert7,
+        #my-alert71 {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.6rem;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .6);
+            z-index: 10;
+            transition: opacity .15s;
+            opacity: 1;
+            display: block;
+        }
+
+
+        .overlay {
+            background-color: transparent;
+        }
+
+        .signup-header h3 {
+            color: black;
+        }
+    </style>
+</head>
+
+<body data-spy="scroll" data-target="#navbar-scroll">
+
+        <div class="row" style="display: flex;justify-content: center;align-items: center;">
+                <div  style="background-color: white;border-radius: 8px">
+                    <h3 class="form-title text-center">注册新账号</h3>
+                    <form class="form-header" role="form" id="register_form">
+                        <div class="form-group">
+                            <input class="form-control input-lg" name="account" id="account" type="text"
+                                placeholder="用户名">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control input-lg" name="email" id="email" type="text"
+                                placeholder="邮箱">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control input-lg" name="password" id="password" type="password"
+                                placeholder="密码">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control input-lg" name="repassword" id="repassword"
+                                type="password" placeholder="请再次输入密码">
+                        </div>
+                        <div class="form-group last" style="background-color: #0499ff;">
+                            <input type="button" class="btn btn-warning btn-block btn-lg" value="注册"
+                                onclick="register_ajax('#register_form')">
+                        </div>
+                        <p style="font-size: medium" class="privacy text-center"> <a href="/Login/login"
+                                style="text-decoration: none;">已有账号？请登录</a></p>
+                    </form>
+                </div>
+        </div>
+
+
+
+    <div tabindex="-1" id="my-alert1" style="display: none;">
+        <div id="my-alert2">
+            <div id="my-alert3">接口测试自动化平台</div>
+            <div id="my-alert4">有选项的输入为空，请检查</div>
+            <div id="my-alert5">
+                <span id="my-alert6">确定</span>
+            </div>
+        </div>
+    </div>
+    <div tabindex="-1" id="my-alert11" style="display: none;">
+        <div id="my-alert21">
+            <div id="my-alert31">接口测试自动化平台</div>
+            <div id="my-alert41">注册成功，3秒后调整到登录页面</div>
+            <div id="my-alert51">
+                <span id="my-alert6">确定</span>
+            </div>
+        </div>
+    </div>
+    <div id="my-alert7" style="display: none;"></div>
+
+    <script src="{% static 'cdn.bootcss.com/jquery/2.1.1/jquery.min.js' %}"></script>
+    <script src="{% static 'cdn.bootcss.com/jquery.serializeJSON/2.9.0/jquery.serializejson.min.js' %}"></script>
+    <script src="{% static 'cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js' %}"></script>
+    <script src="{% static "assets/js/custom.js" %}"></script>
+    <script src="{% static "assets/js/jquery.sticky.js" %}"></script>
+    <script src="{% static "assets/js/wow.min.js" %}"></script>
+    <script src="{% static "assets/js/owl.carousel.min.js" %}"></script>
+    <script src="{% static 'cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js' %}"></script>
+    <script>
+        function test() {
+                                window.location.href = '/Login/login/';
+                            }
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('form').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    account: {
+                        message: '用户名验证失败',
+                        validators: {
+                            stringLength: {
+                                min: 3,
+                                max: 15,
+                                message: '用户名长度必须在3到15位之间'
+                            },
+                            regexp: {
+                                regexp: /^[a-z0-9_-]{3,16}$/,
+                                message: '用户名只能包含、小写、数字和下划线'
+                            }
+                        }
+                    },
+                    password: {
+                        validators: {
+                            stringLength: {
+                                min: 6,
+                                max: 18,
+                                message: '密码长度必须在6到18位之间'
+                            },
+                            regexp: {
+                                regexp: /^[a-z0-9_-]{3,16}$/,
+                                message: '密码只能包含、小写、数字和下划线'
+                            }
+                        }
+                    },
+                    repassword: {
+                        message: '密码无效',
+                        validators: {
+                            identical: {//相同
+                                field: 'password',
+                                message: '两次密码不一致'
+                            },
+                        }
+                    },
+                    email: {
+                        validators: {
+                            emailAddress: {
+                                message: '邮箱地址格式有误'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        /*表单信息异步传输*/
+        function register_ajax(id) {
+
+
+            var account = $.trim($("#account").val());
+            var email = $.trim($("#email").val());
+            var password = $.trim($("#password").val());
+            var repassword = $.trim($("#repassword").val());
+
+
+            if (account == "" || password == "" || email == "" || repassword == "") {
+                $("#my-alert7").show();
+                $("#my-alert1").show();
+                return false;
+            }
+            else {
+                $("#account").val(account);
+                $("#email").val(account);
+                $("#password").val(password);
+                $("#repassword").val(password);
+            }
+
+
+
+
+
+
+            if ($(id).data('bootstrapValidator').isValid()) {
+                var data = $(id).serializeJSON();
+                var url;
+                if (id === "#register_form") {
+                    url = '/Login/register/';
+                }
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (data === '恭喜您，账号已成功注册') {
+                            $("#my-alert11").show();
+                            var time = setInterval("test()", "3000"); 
+
+
+                            
+                        } else {
+                            alert(data);
+                        }
+                    },
+                    error: function () {
+                        alert('服务器可能开小差啦, 请重试!')
+                    }
+                });
+            }
+        }
+
+
+    </script>
+    <script>
+        $("#my-alert6").click(function (e) {
+            $("#my-alert1").hide();
+            $("#my-alert7").hide();
+
+
+        });
+
+
+
+
+    </script>
+
+</body>
+
+</html>

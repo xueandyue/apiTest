@@ -1,0 +1,1265 @@
+{% extends "base.html" %}
+{% block title %}修改页面{% endblock %}
+{% load staticfiles %}
+{% load custom_tags %}
+{% block content %}
+<script>
+        $("#upload_project_info").remove();
+        var import_type_init="{{import_type}}";
+ </script>
+
+<link rel="stylesheet" href="{% static 'use.fontawesome.com/releases/v5.5.0/css/all.css' %}" crossorigin="anonymous">
+<script src="{% static 'bootstrap-fileinput/js/locales/zh.js' %}" type="text/javascript"></script>
+<link href="{% static 'switch/bootstrap-switch.min.css' %}" rel="stylesheet" type="text/css" />
+<script src="{% static 'switch/bootstrap-switch.min.js' %}" type="text/javascript"></script>
+<script type="text/javascript">
+    var api_swith = true;
+    $(function () {
+        /*初始化开关控件*/
+        $('[name="checkbox-name"]').bootstrapSwitch(
+            "onSwitchChange", function (event, state) {
+
+                if (state == true) {
+
+                    $("#api_template").show();
+                    $("#request").hide();
+                    api_swith = true;
+
+                } else {
+                    $("#api_template").hide();
+                    $("#api_value").val("");
+                    $("#request").show();
+                    api_swith = false;
+
+                }
+            });
+    });
+
+</script>
+
+<style>
+    .tab {
+        overflow: hidden;
+        padding: 15px;
+    }
+</style>
+
+<div class="am-modal am-modal-confirm" tabindex="-1" id="save_test">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">{{WEB_NAME}}</div>
+        <form class="form-horizontal" id="form_message">
+                <div class="form-group" style="display: none">
+                        <label class="control-label col-sm-3" for="test_index"
+                               style="font-weight: inherit; font-size: small ">用例索引:</label>
+                        <div class="col-sm-8">
+                            <input name="test_index" type="text" class="form-control" id="test_index"
+                                   placeholder="模块名称" value="{{ info.id }}">
+                        </div>
+                    </div>
+            <div class="form-group" style="display: none">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f;">编写人员</div>
+                    <input type="text" class="form-control" id="author" name="author" placeholder=""
+                        value="{{ account }}">
+                </div>
+            </div>
+
+            <div class="form-group" style="display: none">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f;">引用配置</div>
+                    <input type="text" class="form-control" id="config_pre" name="config" placeholder="" value="">
+                </div>
+            </div>
+
+            <!-- <div class="form-group">
+                <label class="control-label col-sm-3" for="case_name"
+                    style="font-weight: inherit; font-size: small ">用例名称:</label>
+                <div class="col-sm-8">
+                    <input name="case_name" type="text" class="form-control" id="case_name" placeholder="给用例起个名吧"
+                        value="">
+                </div>
+            </div> -->
+
+
+
+
+        </form>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+            <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+        </div>
+    </div>
+</div>
+
+<div class="am-modal am-modal-confirm" tabindex="-1" id="select_case">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">接口测试自动化平台</div>
+        <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+            <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择项目:</label>
+            <div class="col-sm-8">
+                <select class="form-control" id="select_case_project">
+                    <option value="请选择">请选择</option>
+                    {% for foo in project %}
+                    <option value="{{ foo.project_name }}">{{ foo.project_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        </div>
+
+        <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+            <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择模块:</label>
+            <div class="col-sm-8">
+                <select class="form-control" id="select_case_moudle">
+                </select>
+            </div>
+
+        </div>
+        <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+            <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择用例:</label>
+            <div class="col-sm-8">
+                <select class="form-control" id="select_case_case">
+                </select>
+            </div>
+
+        </div>
+
+
+
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+            <span class="am-modal-btn" id="select_case_confirm">确定</span>
+        </div>
+    </div>
+</div>
+
+
+<div class="am-modal am-modal-confirm" tabindex="-1" id="select_config">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">接口测试自动化平台</div>
+        <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+            <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择项目:</label>
+            <div class="col-sm-8">
+                <select class="form-control" id="select_config_project">
+                    <option value="请选择">请选择</option>
+                    {% for foo in project %}
+                    <option value="{{ foo.project_name }}">{{ foo.project_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        </div>
+
+        <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+            <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择模块:</label>
+            <div class="col-sm-8">
+                <select class="form-control" id="select_config_moudle">
+                </select>
+            </div>
+
+        </div>
+        <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+            <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择配置:</label>
+            <div class="col-sm-8">
+                <select class="form-control" id="select_config_config">
+                </select>
+            </div>
+
+        </div>
+
+
+
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+            <span class="am-modal-btn" id="select_config_confirm">确定</span>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="admin-biaogelist">
+
+    <div class="listbiaoti am-cf">
+            <ul class="am-icon-flag on"> 用例修改</ul>
+            <dl class="am-icon-home" style="float: right;">当前位置： 用例管理 > <a href="#">修改用例</a></dl>
+    </div>
+    <div class="am-tabs am-margin">
+        <ul class="am-tabs-nav am-nav am-nav-tabs" id="tab-test">
+            <li><a href="javascript:;" data-target="#tab1">项目信息</a></li>
+        </ul>
+        <div class="am-tabs-bd">
+            <div class="tab" id="tab1">
+                <div style="float: left; width: 40%;">
+                    <form class="form-horizontal" id="belong_message">
+                        <div class="form-group">
+                            <div class="input-group col-md-10 col-md-offset-1">
+                                <div class="input-group-addon" style="color: #0a628f">所属项目</div>
+                                <select id='project' name="project" class="form-control"
+                                    onchange="auto_load('#belong_message', '/Index/add_case/', '#belong_module_id', 'module')">
+                                    <option value="{{ info.belong_project }}"
+                                                selected>{{ info.belong_project }}</option>
+                                        {% for obj in project %}
+                                            {% ifnotequal info.belong_project obj.project_name %}
+                                                <option value='{{ obj.project_name }}'>{{ obj.project_name }}</option>
+                                            {% endifnotequal %}
+                                        {% endfor %}
+                                        <option value="请选择">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group col-md-10 col-md-offset-1">
+                                <div class="input-group-addon" style="color: #0a628f">可选模块</div>
+                                <select id="belong_module_id" name="module" class="form-control">
+                                        <option value="{{ info.belong_module.id }}"
+                                                selected>{{ info.belong_module.module_name }}</option>
+                                        {% for obj in module %}
+                                            {% ifnotequal info.belong_module.module_name obj.module_name %}
+                                                <option value='{{ obj.id }}'>{{ obj.module_name }}</option>
+                                            {% endifnotequal %}
+                                        {% endfor %}
+                                        <option value="请选择">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="display: none;">
+                                <div class="input-group col-md-10 col-md-offset-1" id="config_div">
+                                    <div class="input-group-addon" style="color: #0a628f">可选配置</div>
+                                    <input type="text"  class="form-control" id="config_iput"
+                                    value="{% if 'config' in include.0.keys %}
+                                    {{ include.0.config.1}}
+                                     {% endif %}"
+                                    />
+                                    <select id="config" name="config" class="form-control" style="display: none;">
+                                            {% if 'config' in include.0.keys %}
+                                            <option value="{{ include.0.config.0 }}">{{ include.0.config.1 }}111</option>
+                                        {% endif %}
+                                        {% for obj in config %}
+                                            {% ifnotequal include.0.config.1 obj.name %}
+                                                <option value='{{ obj.id }}'>{{ obj.name }}333</option>
+                                            {% endifnotequal %}
+                                        {% endfor %}
+                                            <option value="请选择">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        <div class="form-group" style="display: none;">
+                            <div class="input-group col-md-10 col-md-offset-1" id="belong_case_id_div">
+                                <div class="input-group-addon" style="color: #0a628f">前置用例</div>
+                                <input type="text" value="点击选择" class="form-control" id="belong_case_id_iput" />
+                                <select id="belong_case_id" name="include" class="form-control" style="display: none;">
+                                </select>
+                            </div>
+                        </div>
+
+                       
+                        <div class="form-group">
+                            <div class="input-group col-md-10 col-md-offset-1">
+                                <div class="input-group-addon" style="color: #0a628f">用例/api名称</div>
+                                <input name="case_name" type="text" class="form-control" id="case_name"
+                                    placeholder="起个名吧"   value="{{ info.name }}" >
+
+                            </div>
+                        </div>
+                    </form>
+                    <div class="form-group" style="margin-left: -15px;margin-right: -15px;">
+                        <div class="input-group col-md-10 col-md-offset-1">
+                            <div class="input-group-addon" style="color: #0a628f">用例类型</div>
+                            <select class="form-control" name="import_type" id="import_type"  style="width: 195px;">
+                                <option value="3" >api</option>
+                                <option value="1">testcase</option>
+                                </select>
+                            <!-- <button  type="button" style="height: 34px;" class="am-btn am-btn-secondary am-radius"
+                        data-toggle="modal" id="import_button" data-target="#type_uploadcase">点击导入
+                    </button> -->
+                        </div>
+                        
+                    </div>
+                </div>
+                <div style="float: right; width: 50%;margin-right: 1%;display: none">
+                    <div class="form-group">
+                        <div class="input-group col-md-10">
+                            <div class="input-group-addon" id="close_collapse" style="color: #0a628f;line-height: 2;">前置配置<br/>与用例列表</div>
+
+                            <a class="am-btn am-btn-primary am-radius am-btn-block" href="#" id="pre_collapse"
+                                style="font-size: 16px; background-color: #fff; color: #555; text-align: left"
+                                data-am-collapse="{target: '#pre_case'}">
+                                 执 行 顺 序
+                            </a>
+                            <nav>
+                                <ul id="pre_case" class="am-nav">
+                                        {% for foo in info.include|convert_eval %}
+                                        {% if foo|data_type != 'list' %}
+                                            <li id="{{ foo.config.0 }}" name="pre_config" >
+                                            <div style="float: left;"><img src="{% static 'img/peizhi.jpg' %}" width="20px;" height="100%;"></div>
+                                                <a href="/Index/edit_config/{{ foo.config.0 }}/"
+                                                   id="{{ foo.config.0 }}"
+                                                   style="color:cadetblue">{{ foo.config.1 }}</a>
+                                                <i class="js-remove"
+                                                   onclick=remove_self('#{{ foo.config.0 }}')>✖</i></li>
+                                            </li>
+                                        {% else %}
+                                            <li id="{{ foo.0 }}">
+                                            <div style="width: 20px;height: 20px;float:left;margin: 0 auto;border-radius: 10px;background-color: #0f9ae0;"></div>
+                                                <a href="/Index/edit_case/{{ foo.0 }}/"
+                                                   id="{{ foo.0 }}">{{ foo.1 }}</a>
+                                                <i class="js-remove" onclick=remove_self('#{{ foo.0 }}')>✖</i>
+                                            </li>
+
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </nav>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+        <div style="width:100%;margin-top: 20px;" id="api_list">
+            <ul class="am-tabs-nav am-nav am-nav-tabs" id="tab-test">
+                <li class="am-active"><a href="javascript:;" data-target="#tab5">API</a></li>
+            </ul>
+            <div class="am-tabs-bd">
+
+
+
+                <div class="tab" id="tab5">
+                    <div class="form-inline">
+
+                        <div class="form-group " style="line-height: 30px;">
+
+                            <div class="switch" data-on-label="SI" data-off-label="NO" style="float: left;">
+                                <span style="color: #0a628f;margin-right: 20px;">使用api模板</span><input type="checkbox"
+                                    checked name="checkbox-name" />
+                            </div>
+
+                            <div class="input-group" style="margin-left: 30px;" id="api_template">
+                                <div class="input-group-addon">选择api文件 </div>
+                                <select class="form-control" name="api_value" id="api_value">
+                                </select>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <ul class="am-tabs-nav am-nav am-nav-tabs" id="tab-miaoshu">
+            <li class="am-active"><a>描述</a></li>
+        </ul>
+
+        <div class="am-tabs-bd">
+            <div class="tab" >
+                <textarea name="describe" id="describe" style="width: 100%;height: 100px;overflow: scroll;">{{ info.describe }}</textarea>
+            </div>
+
+        </div>
+
+        <ul class="am-tabs-nav am-nav am-nav-tabs" id="tab-test">
+            <li class="am-active"><a href="javascript:;" data-target="#tab2">变量与处理器</a></li>
+        </ul>
+
+        <div class="am-tabs-bd">
+            <div class="tab" id="tab2">
+                <button class="btn btn-info am-icon-plus" value="添 加" onclick="add_row('variables')"></button>
+                <button class="btn btn-danger" value="删 除" onclick="del_row('variables')"><span
+                        class="am-icon-trash-o"></span></button>
+
+
+                <form id="form_variables">
+                    <table class="table table-hover table-condensed table-bordered table-striped" id="variables">
+                        <caption>变量:</caption>
+                        <thead>
+                            <tr class="active text-success">
+                                <th width="5%" align="center">序列</th>
+                                <th width="30%" align="center">变量名</th>
+                                <th width="10%" align="center">值类型</th>
+                                <th width="55%" align="center">变量值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                {% for foo in request.variables %}
+                                    <tr>
+                                        
+                                        {% for key, value in foo.items %}
+                                        <td><input type="checkbox" name="variables" style="width:55px"></td>
+    
+                                            <td><input type="text" name="test[][key]"
+                                                       value="{{ key }}" style="width:100%; border: none"></td>
+                                            <td>
+                                                <select name='test[][type]'
+                                                        class='form-control'
+                                                        style='height: 25px; font-size: 15px; padding-top: 0px; padding-left: 0px; border: none'>
+    
+                                                    {% if value|data_type == 'str' %}
+                                                        <option>string</option>
+                                                        <option>int</option>
+                                                        <option>float</option>
+                                                        <option>boolean</option>
+                                                    {% elif value|data_type == 'int' %}
+                                                        <option>int</option>
+                                                        <option>string</option>
+                                                        <option>float</option>
+                                                        <option>boolean</option>
+                                                    {% elif value|data_type == 'float' %}
+                                                        <option>float</option>
+                                                        <option>string</option>
+                                                        <option>int</option>
+                                                        <option>boolean</option>
+                                                    {% elif value|data_type == 'bool' %}
+                                                        <option>boolean</option>
+                                                        <option>string</option>
+                                                        <option>int</option>
+                                                        <option>float</option>
+                                                    {% endif %}
+                                                </select>
+                                            </td>
+                                            <td><input type="text"
+                                                       name="test[][value]" value="{{ value }}"
+                                                       style="width:100%; border: none"></td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                    </table>
+                </form>
+
+                <button class="btn btn-info am-icon-plus" value="添 加" onclick="add_row('hooks')"></button>
+                <button class="btn btn-danger" value="删 除" onclick="del_row('hooks')"><span
+                        class="am-icon-trash-o"></span></button>
+
+
+                <form id="form_params" style="display: none;">
+                    <table class="table table-hover table-condensed table-bordered table-striped" id="params">
+                        <caption>parameters:</caption>
+                        <thead>
+                            <tr class="active text-success">
+                                <th width="5%" align="center">Option</th>
+                                <th width="20%" align="center">Key</th>
+                                <th width="75%" align="center">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </form>
+                <form id="form_hooks">
+                    <table class="table table-hover table-condensed table-bordered table-striped" id="hooks">
+                        <caption>处理器：</caption>
+                        <thead>
+                            <tr class="active text-success">
+                                <th width="5%" align="center">序列</th>
+                                <th width="47.5%" align="center">前置处理器</th>
+                                <th width="47.5%" align="center">后置处理器</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                {% if request.setup_hooks|length >= request.teardown_hooks|length %}
+                                    {% for foo in  request.setup_hooks %}
+                                        <tr>
+                                            <td><input type="checkbox" name="hooks" style="width:55px"></td>
+                                            <td><input type="text" name='test[][key]'
+                                                       value="{{ foo }}" style="width:100%; border: none"></td>
+                                            <td>
+                                                {% for foos in  request.teardown_hooks %}
+                                                    {% if forloop.parentloop.counter0 == forloop.counter0 %}
+                                                        <input type="text" name='test[][value]'
+                                                               value="{{ foos }}"
+                                                               style="width:100%; border: none">
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if forloop.counter > request.teardown_hooks|length %}
+                                                    <input type="text" name='test[][value]'
+                                                           value=""
+                                                           style="width:100%; border: none">
+    
+                                                {% endif %}
+                                            </td>
+    
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for foo in  request.teardown_hooks %}
+                                        <tr>
+                                            <td><input type="checkbox" name="hooks" style="width:55px"></td>
+                                            <td>
+                                                {% for foos in  request.setup_hooks %}
+                                                    {% if forloop.parentloop.counter0 == forloop.counter0 %}
+                                                        <input type="text" name='test[][key]'
+                                                               value="{{ foos }}"
+                                                               style="width:100%; border: none">
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if forloop.counter > request.setup_hooks|length %}
+                                                    <input type="text" name='test[][key]'
+                                                           value=""
+                                                           style="width:100%; border: none">
+    
+                                                {% endif %}
+                                            </td>
+                                            <td><input type="text" name='test[][value]'
+                                                       value="{{ foo }}" style="width:100%; border: none"></td>
+    
+                                        </tr>
+                                    {% endfor %}
+    
+                                {% endif %}
+    
+                                </tbody>
+                       
+                    </table>
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+
+
+        <div id="request" style="margin-top: 20px;">
+
+            <ul class="am-tabs-nav am-nav am-nav-tabs" id="tab-test">
+                <li class="am-active"><a href="javascript:;" data-target="#tab3">请求</a></li>
+            </ul>
+            <div class="am-tabs-bd">
+                <div class="tab" id="tab3">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">接口地址</div>
+                                <input type="text" class="form-control" id="url" name="url" placeholder="url" value="{{ request.request.url }}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <div class="input-group">
+                                <div class="input-group-addon">提交方法</div>
+                                 <select class="form-control" name="method" id="method">
+                                    <option>{{ request.request.method }}</option>
+                                    {% if request.request.method == 'GET' %}
+                                        <option>POST</option>
+                                        <option>PUT</option>
+                                        <option>DELETE</option>
+                                    {% elif request.request.method == 'POST' %}
+                                        <option>GET</option>
+                                        <option>PUT</option>
+                                        <option>DELETE</option>
+                                    {% elif request.request.method == 'PUT' %}
+                                        <option>GET</option>
+                                        <option>POST</option>
+                                        <option>DELETE</option>
+                                    {% elif request.request.method == 'DELETE' %}
+                                        <option>GET</option>
+                                        <option>POST</option>
+                                        <option>DELETE</option>
+
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <div class="input-group">
+                                <div class="input-group-addon">发送数据类型</div>
+                                <select class="form-control" name="DataType" id="DataType">
+                                        {% if 'data' in request.request.keys %}
+                                        <option selected>data</option>
+                                        <option>json</option>
+        
+                                    {% elif 'json' in request.request.keys %}
+                                        <option selected>json</option>
+                                        <option>data</option>
+                                    {% elif 'params' in request.request.keys %}
+                                        <option selected>params</option>
+                                        <option>data</option>
+                                        <option>json</option>
+                                    {% else %}
+                                        <option>data</option>
+                                        <option>json</option>
+                                        <option>params</option>
+
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        <div style="overflow: hidden;margin-top: 20px;">
+
+                                <button class="btn btn-info am-icon-plus" value="添 加" id="add_data" onclick="add_row('data')">
+                                </button>
+                                <button class="btn btn-danger" value="删 除" id="del_data" onclick="del_row('data')"><span
+                                        class="am-icon-trash-o"></span></button>
+                                </div>
+                        <form id="form_request_data">
+                                {% if 'json' in request.request.keys %}
+                                <span style="font-size:10px;" id="json-text">
+                                   <div style="margin-left: 0px; margin-top: 5px; height: 200px">
+                                       <pre id="code" class="ace_editor"
+                                            style="margin-top: 0px; margin-bottom: 0px; min-height: 200px;">
+<textarea style="left: 0px">
+{{ request.request.json|json_dumps }}
+</textarea>
+                                       </pre>
+                                   </div>
+                                </span>
+                            {% else %}
+                                <table class="table table-hover table-condensed table-bordered table-striped" id="data">
+                                    <caption>请求:</caption>
+                                    <thead>
+                                            <tr class="active text-success">
+                                                    <th width="5%" align="center">序列</th>
+                                                    <th width="30%" align="center">参数名</th>
+                                                    <th width="5%" align="center">类型</th>
+                                                    <th width="60%" align="center">参数值</th>
+                                                </tr>
+                                   
+                                    </thead>
+                                    <tbody>
+                                    {% if 'data' in request.request.keys %}
+                                        {% for key, value in request.request.data.items %}
+                                            <tr>
+                                                <td><input type="checkbox" name="data" style="width:55px">
+                                                </td>
+                                                <td><input type="text" name='test[][key]' value="{{ key }}"
+                                                           style="width:100%; border: none"></td>
+                                                <td><select name='test[][type]'
+                                                            class='form-control'
+                                                            style='height: 25px; font-size: 15px; padding-top: 0px; padding-left: 0px; border: none'>
+                                                    {% if value|data_type == 'str' %}
+                                                        <option>string</option>
+                                                        <option>int</option>
+                                                        <option>float</option>
+                                                        <option>boolean</option>
+                                                    {% elif value|data_type == 'int' %}
+                                                        <option>int</option>
+                                                        <option>string</option>
+                                                        <option>float</option>
+                                                        <option>boolean</option>
+                                                    {% elif value|data_type == 'float' %}
+                                                        <option>float</option>
+                                                        <option>string</option>
+                                                        <option>int</option>
+                                                        <option>boolean</option>
+                                                    {% elif value|data_type == 'bool' %}
+                                                        <option>boolean</option>
+                                                        <option>string</option>
+                                                        <option>int</option>
+                                                        <option>float</option>
+                                                    {% endif %}
+                                                </select></td>
+                                                <td><input type="text" name='test[][value]' value="{{ value }}"
+                                                           style="width:100%; border: none"></td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% elif 'params' in request.request.keys %}
+                                        {% for key, value in request.request.params.items %}
+                                            <tr>
+                                                <td><input type="checkbox" name="data"
+                                                           style="width:55px">
+                                                </td>
+                                                <td><input type="text" name='test[][key]' value="{{ key }}"
+                                                           style="width:100%; border: none"></td>
+                                                <td><select name='test[][type]'
+                                                            class='form-control'
+                                                            style='height: 25px; font-size: 15px; padding-top: 0px; padding-left: 0px; border: none'>
+                                                    {% if value|data_type == 'str' %}
+                                                        <option>string</option>
+                                                        <option>int</option>
+                                                        <option>float</option>
+                                                        <option>boolean</option>
+                                                    {% elif value|data_type == 'int' %}
+                                                        <option>int</option>
+                                                        <option>string</option>
+                                                        <option>float</option>
+                                                        <option>boolean</option>
+                                                    {% elif value|data_type == 'float' %}
+                                                        <option>float</option>
+                                                        <option>string</option>
+                                                        <option>int</option>
+                                                        <option>boolean</option>
+                                                    {% elif value|data_type == 'bool' %}
+                                                        <option>boolean</option>
+                                                        <option>string</option>
+                                                        <option>int</option>
+                                                        <option>float</option>
+                                                    {% endif %}
+                                                </select></td>
+                                                <td><input type="text" name='test[][value]' value="{{ value }}"
+                                                           style="width:100%; border: none"></td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
+                        </form>
+                        <div style="margin-top:20px;">
+
+                        <button class="btn btn-info am-icon-plus" value="添 加" onclick="add_row('header')"></button>
+                        <button class="btn btn-danger" value="删 除" onclick="del_row('header')"><span
+                                class="am-icon-trash-o"></span></button>
+                        </div>
+
+
+                        <form id="form_request_headers">
+                            <table class="table table-hover table-condensed table-bordered table-striped" id="header">
+                                <caption>请求头部:</caption>
+                                <thead>
+                                    <tr class="active text-success">
+                                        <th width="5%" align="center">序列</th>
+                                        <th width="40%" align="center">参数名</th>
+                                        <th width="55%" align="center">参数值</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        {% if 'headers' in request.request.keys %}
+                                        {% for key, value in request.request.headers.items %}
+                                            <tr>
+                                                <td><input type="checkbox" name="header" style="width:55px">
+                                                </td>
+                                                <td><input type="text" name='test[][key]' value="{{ key }}"
+                                                           style="width:100%; border: none"></td>
+                                                <td><input type="text" name='test[][value]' value="{{ value }}"
+                                                           style="width:100%; border: none"></td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <ul class="am-tabs-nav am-nav am-nav-tabs" id="tab-test">
+            <li class="am-active"><a href="javascript:;" data-target="#tab4">提取与期望验证</a></li>
+        </ul>
+        <div class="am-tabs-bd">
+
+            <div class="tab" id="tab4">
+                <button class="btn btn-info am-icon-plus" value="添 加" onclick="add_row('extract')">
+                </button>
+                <button class="btn btn-danger" value="删 除" onclick="del_row('extract')"><span
+                        class="am-icon-trash-o"></span>
+                </button>
+
+                <form id="form_extract">
+                    <table class="table table-hover table-condensed table-bordered table-striped" id="extract">
+                        <caption>变量提取:</caption>
+                        <thead>
+                            <tr class="active text-success">
+                                <th width="5%" align="center">序列</th>
+                                <th width="30%" align="center">变量名称</th>
+                                <th width="55%" align="center">提取值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                {% for foo in request.extract %}
+                                <tr>
+                                    <td><input type="checkbox" name="extract" style="width:55px"></td>
+                                    {% for key, value in foo.items %}
+
+                                        <td><input type="text" name='test[][key]' value="{{ key }}"
+                                                   style="width:100%; border: none"></td>
+                                        <td><input type="text" name='test[][value]' value="{{ value }}"
+                                                   style="width:100%; border: none"></td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </tbody>
+                    </table>
+                </form>
+                <button class="btn btn-info am-icon-plus" value="添 加" onclick="add_row('validate')"></button>
+                <button class="btn btn-danger" value="删 除" onclick="del_row('validate')"><span
+                        class="am-icon-trash-o"></span></button>
+
+                <form id="form_validate">
+
+                    <table class="table table-hover table-condensed table-bordered table-striped" id="validate">
+                        <caption>结果期望:</caption>
+                        <thead>
+                            <tr class="active text-success">
+                                <th width="4%" align="center">序列</th>
+                                <th width="32%" align="center">*期望属性</th>
+                                <th width="10%" align="center">*期望关系</th>
+                                <th width="8%" align="center">*值类型</th>
+                                <th width="46%" align="center">*期望值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {{foo}}
+                                {% for foo in request.validate %}
+                                <tr>
+                                    <td><input type="checkbox" name="validate"
+                                               style="width:55px"></td>
+                                    <td><input type="text" name='test[][key]' value="{{ foo.check }}"
+                                               style="width:100%; border: none"></td>
+                                    <td><select name='test[][comparator]' class="form-control"
+                                                style="height: 25px; font-size: 15px; padding-top: 0px; padding-left: 0px; border: none">
+                                        {% ifequal foo.comparator 'equals' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>equals</option>
+                                        {% endifequal %}
+
+                                        {% ifequal foo.comparator 'contains' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>contains</option>
+                                        {% endifequal %}
+                                        {% ifequal foo.comparator 'startswith' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>startswith</option>
+                                        {% endifequal %}
+                                        {% ifequal foo.comparator 'endswith' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>endswith</option>
+                                        {% endifequal %}
+
+                                        {% ifequal foo.comparator 'regex_match' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>regex_match</option>
+                                        {% endifequal %}
+                                        {% ifequal foo.comparator 'type_match' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>type_match</option>
+                                        {% endifequal %}
+                                        {% ifequal foo.comparator 'contained_by' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>contained_by</option>
+                                        {% endifequal %}
+
+                                        {% ifequal foo.comparator 'less_than' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>less_than</option>
+                                        {% endifequal %}
+                                        {% ifequal foo.comparator 'less_than_or_equals' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>less_than_or_equals</option>
+                                        {% endifequal %}
+                                        {% ifequal foo.comparator 'greater_than' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>greater_than</option>
+                                        {% endifequal %}
+
+                                        {% ifequal foo.comparator 'greater_than_or_equals' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>greater_than_or_equals</option>
+                                        {% endifequal %}
+                                        {% ifequal foo.comparator 'not_equals' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>not_equals</option>
+                                        {% endifequal %}
+                                        {% ifequal foo.comparator 'string_equals' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>string_equals</option>
+                                        {% endifequal %}
+
+                                        {% ifequal foo.comparator 'length_equals' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>length_equals</option>
+                                        {% endifequal %}
+                                        {% ifequal foo.comparator 'length_greater_than' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>length_greater_than</option>
+                                        {% endifequal %}
+                                        {% ifequal foo.comparator 'length_greater_than_or_equals' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>length_greater_than_or_equals</option>
+                                        {% endifequal %}
+
+                                        {% ifequal foo.comparator 'length_less_than' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>length_less_than</option>
+                                        {% endifequal %}
+                                        {% ifequal foo.comparator 'length_less_than_or_equals' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>length_less_than_or_equals</option>
+                                        {% endifequal %}
+
+                                        {% ifequal foo.comparator 'le' %}
+                                            <option selected>{{ foo.comparator }}</option>
+                                        {% else %}
+                                            <option>le</option>
+                                        {% endifequal %}
+
+                                    </select></td>
+                                    <td>
+                                        <select name='test[][type]'
+                                                class='form-control'
+                                                style='height: 25px; font-size: 15px; padding-top: 0px; padding-left: 0px; border: none'>
+                                            {% if foo.expect|data_type == 'str' %}
+                                                <option>string</option>
+                                                <option>int</option>
+                                                <option>float</option>
+                                                <option>boolean</option>
+                                            {% elif foo.expect|data_type == 'int' %}
+                                                <option>int</option>
+                                                <option>string</option>
+                                                <option>float</option>
+                                                <option>boolean</option>
+                                            {% elif foo.expect|data_type == 'float' %}
+                                                <option>float</option>
+                                                <option>string</option>
+                                                <option>int</option>
+                                                <option>boolean</option>
+                                            {% elif foo.expect|data_type == 'bool' %}
+                                                <option>boolean</option>
+                                                <option>string</option>
+                                                <option>int</option>
+                                                <option>float</option>
+                                            {% endif %}
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name='test[][value]' value="{{ foo.expect }}"
+                                               style="width:100%; border: none"></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="am-form-group am-cf">
+        <div class="you" style="margin-left: 11%;">
+            <button id="save" type="button" class="am-btn am-btn-success am-radius">点 击 修改
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="type_uploadcase" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel2">{{WEB_NAME}}</h4>
+            </div>
+            <div class="modal-body">
+                <input name="type_uploadfile" id="type_uploadfile" type="file" multiple />
+                <div id="kartik-file-errors"></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<script>
+    try {
+            editor = ace.edit("code");
+            init_acs('json', 'github', editor);
+        } catch (err) {
+            editor = null;
+        }
+
+    $('#DataType').on('change', function () {
+        if ($('#DataType').val() === 'json') {
+            $('#add_data').attr('disabled', true);
+            $('#del_data').attr('disabled', true);
+            $('#add_data').hide();
+            $('#del_data').hide();
+
+            $('#data').remove();
+            var json_text = "<span style=\"font-size:10px;\" id=\"json-text\">\n" +
+                " <div style=\"margin-left: 0px; margin-top: 5px; height: 200px\">" +
+                "<pre id=\"code\" class=\"ace_editor\" style=\"margin-top: 0px; margin-bottom: 0px; min-height: 200px;\">\n" +
+                "<textarea>\n" +
+                "{\"key\":\"value\"}\n" +
+                "</textarea>\n" +
+                "</pre></div></span>";
+
+            $('#form_request_data').append(json_text);
+
+            editor = ace.edit("code");
+            init_acs('json', 'github', editor);
+
+        } else {
+            var table = '<table class="table table-hover table-condensed table-bordered table-striped" id="data">\n' +
+                '                                <caption>' + "发送的数据"+ ':</caption>\n' +
+                '                                <thead>\n' +
+                '                                <tr class="active text-success">\n' +
+                '                                    <th width="5%" align="center">序列</th>\n' +
+                '                                    <th width="30%" align="center">参数名</th>\n' +
+                '                                    <th width="5%" align="center">类型</th>\n' +
+                '                                    <th width="60%" align="center">参数值</th>\n' +
+                '                                </tr>\n' +
+                '                                </thead>\n' +
+                '                                <tbody>\n' +
+                '                                </tbody>\n' +
+                '                            </table>';
+
+            // $('#add_data').text('add ' + $('#DataType').val());
+            // $('#del_data').text('del ' + $('#DataType').val());
+
+
+            $('#add_data').removeAttr("disabled");
+            $('#del_data').removeAttr("disabled");
+            $('#add_data').show();
+            $('#del_data').show();
+            $('#data').remove();
+            $('#json-text').remove();
+            $('#form_request_data').append(table);
+        }
+    });
+
+    $("#tab-test").on("click", "li", function () {
+        $(this).addClass("am-active").siblings("li").removeClass("am-active");
+        var target = $(this).children("a").attr("data-target");
+        $(target).addClass("am-active").siblings(".am-tab-panel").removeClass("am-active");
+    }).find("li").eq(0).trigger("click");
+
+    $(function () {
+        $("#pre_case").sortable();
+        $("#pre_case").disableSelection();
+    });
+
+    // $('#config').on('change', function () {
+    //     if ($('#config').val() !== '请选择') {
+    //         var case_id = $('#config').val();
+    //         var case_name = $('#config option:selected').text();
+
+    //         var href = "<li disbaled id=" + case_id + " name='pre_config'> <div style=\"float: left;\"><img src=\"{% static 'img/peizhi.jpg' %}\" width=\"20px;\" height=\"100%;\"></div><a class='config_class' style='color: cadetblue;margin-left: 30px;' href='/Index/edit_config/" + case_id + "/' id = " + case_id + ">" + case_name + "" +
+    //             "</a><i class=\"js-remove\" onclick=remove_self('#" + case_id + "')>✖</i></li>";
+    //         $("li[name='pre_config']").remove();
+    //         $("#pre_case").prepend(href);
+    //         $('#config_pre').val("{'config': ['" + case_id + "', '" + case_name + "']}");
+    //     }
+    // });
+
+    $("li[name='pre_config'] a i").on('click', function () {
+        $('#config_pre').val("");
+    });
+
+    // $('#belong_case_id').on('change', function () {
+    //     alert("111");
+    //     if ($('#belong_case_id').val() !== '请选择') {
+    //         var case_id = $('#belong_case_id').val();
+    //         var case_name = $('#belong_case_id option:selected').text();
+    //         var href = "<li style=\"height: 20px;padding-top: 3px;\" id=" + case_id + "> <div style=\"width: 20px;height: 20px;float:left;margin: 0 auto;border-radius: 10px;background-color: #0f9ae0;\"></div><div><a style=\"margin-left: 30px;\" href='/Index/edit_case/" + case_id + "/' id = " + case_id + ">" + case_name + "" +
+    //             "</a></div><i class=\"js-remove\" onclick=remove_self('#" + case_id + "')>✖</i></li>";
+    //         $("#pre_case").append(href);
+    //     }
+    // });
+
+    function remove_self(id) {
+        $(id).remove();
+    }
+
+    $('#save').on('click', function () {
+
+        // alert($("#api_value").val());
+        var api_value = $.trim($("#api_value").val());
+        var temp=$.trim($("#api_value").text());
+
+        if (api_swith && $("#import_type").val()!="3" ) {
+
+            if (api_value == "请选择" || (api_value=="" && temp!="")) {
+                myAlert('请选择api');
+                return false;
+
+
+            }
+
+        }
+
+        if ($.trim($("#case_name").val()) == "") {
+            myAlert('请输入用例名称');
+            return false;
+        }
+
+        if ($("li[name='pre_config']").length <= 0) {
+            $('#config_pre').val("");
+        }
+
+        case_ajax('edit', editor);
+
+        // $('#save_test').modal({
+        //     relatedTarget: this,
+        //     onConfirm: function () {
+        //         case_ajax('add', editor)
+        //     },
+        //     onCancel: function () {
+        //     }
+        // });
+    })
+
+</script>
+<script src="{% static 'assets/js/add_case.js' %}" type="text/javascript"></script>
+<script>
+     $(document).ready(function($) {
+        if ($('#DataType').val() === 'json') {
+            $("#add_data").hide();
+            $("#del_data").hide();
+        }
+
+
+
+
+    	
+    });
+    $(document).ready(function($) {
+        $("#import_type").change(function(){
+            var import_type=$.trim($("#import_type").val());
+            if(import_type=="1")
+            {
+                $("#api_list").show();
+                if(api_swith)
+                {
+                    $("#request").hide();
+                }
+                
+             
+            }
+            if(import_type=="3")
+            {
+                $("#api_list").hide();
+            }
+
+        });
+        
+        
+    });
+
+
+
+    
+</script>
+<script>
+    if(import_type_init=="1")
+    {
+        // alert('11');
+        $("#import_type").find("option[value = '1']").attr("selected","selected");
+
+
+        // $('#import_type option:selected').text("testcase");
+        // $('#import_type').val("1");
+
+        if(!project)
+            {
+                project=$.trim($("#project").val());
+            }
+
+
+        var data = {
+                'project': project,
+                'module': $("#belong_module_id").val()
+            },
+                url = "/Index/getapilist/"
+            $.ajax({
+                type: 'post',
+                url: url,
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: 'json',
+                success: function (data) {
+                    $("#api_value").html("");
+                    $("#api_value").append("<option>请选择</option>");
+
+
+
+                    // <option>请选择</option>
+
+                    for (let index = 0; index < data.length; index++) {
+                        var temp = "<option " + 'value="' + data[index]['api_id'] + '"' + ">" + data[index]['api_value'] + "</option>";
+                        $("#api_value").append(temp);
+
+                    }
+
+                    var api_id="{{api.id}}";
+                    var api_name="{{api.name}}";
+                    // console.log(api_id);
+                    // console.log(api_name);
+                    // $('#api_value option:selected').text("{{api.name}}");
+                    if(!api_id)
+                    {
+                        $("#api_list").hide();
+                        $("#tab5 > div > div > div.switch > div > div > input[type=checkbox]").click();
+                        $("#request").show();
+
+                    }
+                    else{
+                        $('#api_value').val("{{api.id}}");
+
+
+                    }
+                    
+
+
+
+
+                }
+                ,
+                error: function () {
+                    myAlert('Sorry，服务器可能开小差啦, 请重试!');
+                }
+            });
+            
+
+
+
+
+        $("#api_list").show();
+        if(api_swith)
+        {
+            $("#request").hide();
+        }
+    }
+    else{
+        $("#import_type").find("option[value = '3']").attr("selected","selected");
+    }
+</script>
+
+{% endblock %}

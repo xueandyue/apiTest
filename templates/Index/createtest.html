@@ -1,0 +1,488 @@
+{% extends "base.html" %}
+{% block title %}批量生成用例{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<script>
+    $("#upload_project_info").remove();
+</script>
+<style>
+    .tab {
+        overflow: hidden;
+        padding: 15px;
+    }
+</style>
+
+<div class="admin-biaogelist"  >
+
+    <div class="listbiaoti am-cf">
+        <ul class="am-icon-flag on"> 批量生成用例</ul>
+        <dl class="am-icon-home" style="float: right;">当前位置： 模块管理 > <a href="#">批量生成用例</a></dl>
+    </div>
+    <div class="am-tabs am-margin">
+        <ul class="am-tabs-nav am-nav am-nav-tabs" id="tab-test">
+            <li><a href="javascript:;" data-target="#tab1">项目信息</a></li>
+        </ul>
+        <div class="am-tabs-bd">
+            <div class="tab" id="tab1">
+                <form class="form-horizontal" id="form_config">
+                    <div class="form-group">
+                        <div class="input-group col-md-4 col-md-offset-1">
+                            <div class="input-group-addon" style="color: #0a628f">所属项目</div>
+                            <select id='project' name="project" class="form-control">
+                                <option value="{{project_name}}">{{project_name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group col-md-4 col-md-offset-1">
+                            <div class="input-group-addon" style="color: #0a628f">所属模块</div>
+                            <select id="belong_module_id" name="module" class="form-control">
+                                <option value="{{module_id}}">{{module_name}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group col-md-4 col-md-offset-1">
+                            <div class="input-group-addon" style="color: #0a628f">编写人员</div>
+                            <input type="text" class="form-control" id="config_author" name="author" placeholder="创建者"
+                                value="{{ account }}">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <ul class="am-tabs-nav am-nav am-nav-tabs" id="tab-test">
+            <li class="am-active"><a href="javascript:;" data-target="#tab2">变量与处理器</a></li>
+        </ul>
+
+        <div class="am-tabs-bd">
+            <div class="tab" id="tab2">
+                <button class="btn btn-info am-icon-plus" value="添 加" onclick="add_row('variables')"></button>
+                <button class="btn btn-danger" value="删 除" onclick="del_row('variables')"><span
+                        class="am-icon-trash-o"></span></button>
+
+
+                <form id="config_variables">
+                    <table class="table table-hover table-condensed table-bordered table-striped" id="variables">
+                        <caption>变量:</caption>
+                        <thead>
+                            <tr class="active text-success">
+                                <th width="5%" align="center">序列</th>
+                                <th width="30%" align="center">变量名</th>
+                                <th width="10%" align="center">值类型</th>
+                                <th width="55%" align="center">变量值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </form>
+
+                <button class="btn btn-info am-icon-plus" value="添 加" onclick="add_row('hooks')"></button>
+                <button class="btn btn-danger" value="删 除" onclick="del_row('hooks')"><span
+                        class="am-icon-trash-o"></span></button>
+
+
+                <form id="config_params" style="display: none;">
+                    <table class="table table-hover table-condensed table-bordered table-striped" id="params">
+                        <caption>parameters:</caption>
+                        <thead>
+                            <tr class="active text-success">
+                                <th width="5%" align="center">Option</th>
+                                <th width="20%" align="center">Key</th>
+                                <th width="75%" align="center">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </form>
+                <form id="config_hooks">
+                    <table class="table table-hover table-condensed table-bordered table-striped" id="hooks">
+                        <caption>处理器:</caption>
+                        <thead>
+                            <tr class="active text-success">
+                                <th width="5%" align="center">序列</th>
+                                <th width="47.5%" align="center">前置处理器</th>
+                                <th width="47.5%" align="center">后置处理器</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+
+
+        <div id="request" style="margin-top: 20px;">
+
+            <ul class="am-tabs-nav am-nav am-nav-tabs" id="tab-test">
+                <li class="am-active"><a href="javascript:;" data-target="#tab3">请求</a></li>
+            </ul>
+            <div class="am-tabs-bd">
+                <div class="tab" id="tab3">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">接口地址</div>
+                                <input type="text" class="form-control" id="url" name="url" placeholder="url" />
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <div class="input-group">
+                                <div class="input-group-addon">提交方法</div>
+                                <select class="form-control" name="method" id="method">
+                                    <option>POST</option>
+                                    <option>GET</option>
+                                    <option>PUT</option>
+                                    <option>DELETE</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <div class="input-group">
+                                <div class="input-group-addon">发送数据类型</div>
+                                <select class="form-control" name="DataType" id="config_data_type">
+                                    <option>json</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="overflow: hidden;margin-top: 20px;">
+
+                            <button class="btn btn-info am-icon-plus" value="添 加" id="add_data"
+                                onclick="add_row('data')">
+                            </button>
+                            <button class="btn btn-danger" value="删 除" id="del_data" onclick="del_row('data')"><span
+                                    class="am-icon-trash-o"></span></button>
+                        </div>
+                        <div style="width: 100%;height:200px;">
+
+                            <textarea style="width: 100%;height: 100%;" readonly="readonly">示例解释
+[
+   {
+        "vname":"reqid",   表示入参的名字是reqid
+        "type":"string", 表示入参的类型是string ，有int ,float,string,time四种
+        "default":"$reqId",  表示入参的默认值
+        "check":"true"    true对该入参自动化生成接口用例,false则否
+  }
+  ]                            
+                                    </textarea>
+
+
+                        </div>
+
+                        <form id="config_request_data">
+                            <table class="table table-hover table-condensed table-bordered table-striped" id="data">
+
+                                <caption>发送的数据:</caption>
+                                <thead>
+                                    <tr class="active text-success">
+                                        <th width="5%" align="center">序列</th>
+                                        <th width="30%" align="center">参数名</th>
+                                        <th width="5%" align="center">类型</th>
+                                        <th width="60%" align="center">参数值</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </form>
+
+
+                        <div style="margin-top:20px;">
+
+                            <button class="btn btn-info am-icon-plus" value="添 加" onclick="add_row('header')"></button>
+                            <button class="btn btn-danger" value="删 除" onclick="del_row('header')"><span
+                                    class="am-icon-trash-o"></span></button>
+                        </div>
+
+
+                        <form id="config_request_headers">
+                            <table class="table table-hover table-condensed table-bordered table-striped" id="header">
+                                <caption>请求头部:</caption>
+                                <thead>
+                                    <tr class="active text-success">
+                                        <th width="5%" align="center">序列</th>
+                                        <th width="40%" align="center">参数名</th>
+                                        <th width="55%" align="center">参数值</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <ul class="am-tabs-nav am-nav am-nav-tabs" id="tab-test">
+            <li class="am-active"><a href="javascript:;" data-target="#tab4">变量提取/期望验证</a></li>
+        </ul>
+        <div class="am-tabs-bd">
+
+            <div class="tab" id="tab4">
+
+
+                <button class="btn btn-info am-icon-plus" value="添 加" onclick="add_row('extract')">
+                </button>
+                <button class="btn btn-danger" value="删 除" onclick="del_row('extract')"><span
+                        class="am-icon-trash-o"></span>
+                </button>
+
+                <form id="form_extract">
+                    <table class="table table-hover table-condensed table-bordered table-striped" id="extract">
+                        <caption>变量提取:</caption>
+                        <thead>
+                            <tr class="active text-success">
+                                <th width="5%" align="center">序列</th>
+                                <th width="30%" align="center">变量名称</th>
+                                <th width="55%" align="center">提取值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </form>
+                <button class="btn btn-info am-icon-plus" value="添 加" onclick="add_row('validate')"></button>
+                <button class="btn btn-danger" value="删 除" onclick="del_row('validate')"><span
+                        class="am-icon-trash-o"></span></button>
+
+                <form id="form_validate">
+
+                    <table class="table table-hover table-condensed table-bordered table-striped" id="validate">
+                        <caption>结果期望:</caption>
+                        <thead>
+                            <tr class="active text-success">
+                                <th width="4%" align="center">序列</th>
+                                <th width="32%" align="center">*期望属性</th>
+                                <th width="10%" align="center">*期望关系</th>
+                                <th width="8%" align="center">*值类型</th>
+                                <th width="46%" align="center">*期望值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="am-form-group am-cf">
+        <div class="you" style="margin-left: 11%;">
+            <button type="button" class="am-btn am-btn-success am-radius" onclick="createtest_ajax()">点 击 提
+                交
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+    editor = null;
+
+    $('#config_data_type').on('change', function () {
+        if ($('#config_data_type').val() === 'json') {
+            $('#add_data').attr('disabled', true);
+            $('#del_data').attr('disabled', true);
+            $('#add_data').hide();
+            $('#del_data').hide();
+
+            $('#data').remove();
+            var json_text = "<span style=\"font-size:10px;\" id=\"json-text\">\n" +
+                " <div style=\"margin-left: 0px; margin-top: 5px; height: 200px\">" +
+                "<pre id=\"code\" class=\"ace_editor\" style=\"margin-top: 0px; margin-bottom: 0px; min-height: 200px;\">\n" +
+                "<textarea>\n" +
+                "[{\"key\":\"value\"}]\n" +
+                "</textarea>\n" +
+                "</pre></div></span>";
+
+            $('#config_request_data').append(json_text);
+
+            editor = ace.edit("code");
+            init_acs('json', 'github', editor);
+
+        } else {
+            var table = '<table class="table table-hover table-condensed table-bordered table-striped" id="data">\n' +
+                '                                <caption>' + "发送的数据" + ':</caption>\n' +
+                '                                <thead>\n' +
+                '                                <tr class="active text-success">\n' +
+                '                                    <th width="5%" align="center">序列</th>\n' +
+                '                                    <th width="30%" align="center">参数名</th>\n' +
+                '                                    <th width="5%" align="center">类型</th>\n' +
+                '                                    <th width="60%" align="center">参数值</th>\n' +
+                '                                </tr>\n' +
+                '                                </thead>\n' +
+                '                                <tbody>\n' +
+                '                                </tbody>\n' +
+                '                            </table>';
+
+            // $('#add_data').text('add ' + $('#config_data_type').val());
+            // $('#del_data').text('del ' + $('#config_data_type').val());
+
+            $('#add_data').removeAttr("disabled");
+            $('#del_data').removeAttr("disabled");
+            $('#add_data').show();
+            $('#del_data').show();
+
+            $('#data').remove();
+            $('#json-text').remove();
+            $('#config_request_data').append(table);
+        }
+    });
+
+
+
+    function createtest_ajax(type) {
+        var dataType = $("#config_data_type").serializeJSON();
+        var caseInfo = $("#form_config").serializeJSON();
+        var variables = $("#config_variables").serializeJSON();
+        var parameters = $('#config_params').serializeJSON();
+        var hooks = $('#config_hooks').serializeJSON();
+        var extract = $("#form_extract").serializeJSON();
+        var validate = $("#form_validate").serializeJSON();
+        var request_data = null;
+        if (dataType.DataType === 'json') {
+            try {
+                request_data = eval('(' + editor.session.getValue() + ')');
+            }
+            catch (err) {
+                myAlert('Json格式输入有误！');
+                return
+            }
+        } else {
+            request_data = $("#config_request_data").serializeJSON();
+        }
+        var headers = $("#config_request_headers").serializeJSON();
+
+
+        // console.headers
+
+        // console.log(caseInfo['name']);
+
+        caseInfo['config'] = '';
+        caseInfo['case_name'] = '';
+        caseInfo['import_type'] = '1';
+
+        // var variablestemp=variables['test'];
+        // var headerstemp=headers['test'];
+        // var hookstemp=hooks['test'];
+
+        var test = {
+            "test": {
+                "name": caseInfo,
+                "variables": variables,
+                "extract": extract,
+                "validate": validate,
+                "hooks": hooks,
+
+            }
+        };
+
+
+        var url = $("#url").serializeJSON();
+        var method = $("#method").serializeJSON();
+        test['test']['request'] = {
+            "url": url.url,
+            "method": method.method,
+            "headers": headers,
+            "type": dataType.DataType,
+            "request_data": request_data
+        };
+
+        console.log(JSON.stringify(test));
+        url = "/Index/createtest_ajax/";
+        // return false;
+        $.ajax({
+            type: 'post',
+            url: url,
+            data: JSON.stringify(test),
+            contentType: "application/json",
+            success: function (data) {
+
+                myAlert(data);
+
+                if (data.code == '200') {
+                    myAlert('成功');
+                    window.location.href = "/Index/test_list/1/";
+
+                }
+                else {
+
+                    myAlert(data.error);
+                    window.location.href = "/Index/module_list/1/";
+
+                }
+
+                // if (data === 'session invalid') {
+                //     window.location.href = "/Login/login/";
+                // } else {
+                //     if (data.indexOf('/Index/') != -1) {
+                //         window.location.href = data;
+                //     } else {
+                //         myAlert(data);
+                //     }
+                // }
+            },
+            error: function () {
+                myAlert('Sorry，服务器可能开小差啦, 请重试!');
+            }
+        });
+    }
+
+
+
+
+
+</script>
+<script>
+    if ($('#config_data_type').val() === 'json') {
+        $('#add_data').attr('disabled', true);
+        $('#del_data').attr('disabled', true);
+        $('#add_data').hide();
+        $('#del_data').hide();
+
+        $('#data').remove();
+        var json_text = "<span style=\"font-size:10px;\" id=\"json-text\">\n" +
+            " <div style=\"margin-left: 0px; margin-top: 5px; height: 200px\">" +
+            "<pre id=\"code\" class=\"ace_editor\" style=\"margin-top: 0px; margin-bottom: 0px; min-height: 200px;\">\n" +
+            "<textarea>\n" +
+            "[{\"key\":\"value\"}]\n" +
+            "</textarea>\n" +
+            "</pre></div></span>";
+
+        $('#config_request_data').append(json_text);
+
+        editor = ace.edit("code");
+        init_acs('json', 'github', editor);
+
+    }
+</script>
+{% endblock %}

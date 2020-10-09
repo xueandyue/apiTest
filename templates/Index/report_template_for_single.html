@@ -1,0 +1,1066 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang=zh-cmn-Hans">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{html_report_name}} - TestReport</title>
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <meta name="apple-mobile-web-app-title" content={{ WEB_NAME }}/>
+    
+    <link href="{% static 'fonts.googleapis.com/css.css' %}" rel='stylesheet' type='text/css'>
+    <link href="{% static 'fonts.googleapis.com/icon.css' %}" rel="stylesheet">
+
+    <link href="{% static 'extentreports.com/resx/dist/css/extent.css' %}" type='text/css' rel='stylesheet' />
+    
+    <link href="{% static 'cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css' %}" rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" href="{% static 'cdn.bootcss.com/bootstrap-fileinput/4.4.8/css/fileinput.css' %}"/>
+    <script src="{% static 'cdn.bootcss.com/jquery/2.1.1/jquery.min.js' %}"></script>
+    <script src="{% static 'cdn.bootcss.com/bootstrap-fileinput/4.4.8/js/fileinput.js' %}"></script>
+    <script src="{% static 'cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'cdn.bootcss.com/bootstrap-fileinput/4.4.8/js/fileinput.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'cdn.bootcss.com/bootstrap-fileinput/4.4.8/css/fileinput.min.css' %}"/>
+
+    <link rel="stylesheet"  href="{% static 'assets/css/amazeui.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/admin.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/common.css' %}">
+
+    <script src="{% static 'cdn.bootcss.com/amazeui/2.7.2/js/amazeui.min.js' %}"></script>
+    <script src="{% static 'cdn.bootcss.com/jquery.serializeJSON/2.9.0/jquery.serializejson.min.js' %}"></script>
+
+    <script src="{% static 'cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js' %}" type="text/javascript"
+            charset="utf-8"></script>
+    <script src="{% static 'cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ext-language_tools.js' %}" type="text/javascript"
+            charset="utf-8"></script>
+    <script src="{% static 'apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js' %}"></script>
+
+    <script src="{% static 'assets/js/app.js' %}"></script>
+    <script src="{% static 'assets/js/commons.js' %}"></script>
+
+    <style>
+        .slide--show {
+            display: block !important;
+        }
+    </style>
+    <script>
+        $(function () {
+            $('.sideMenu .slide-item').on('mouseenter', function () {
+                $('.sideMenu .slide-item').find('h3').removeClass('on')
+                $('.sideMenu .slide-item').find('ul').removeClass('slide--show')
+
+                $(this).find('h3').addClass('on')
+                $(this).find('ul').addClass('slide--show')
+            })
+
+
+        })
+    </script>
+
+    <style>
+        .tab {
+            overflow: hidden;
+            padding: 15px;
+        }
+    </style>
+
+    <style type='text/css'>
+        .node.level-1 ul {
+            display: none;
+        }
+
+        .node.level-1.active ul {
+            display: block;
+        }
+
+        .card-panel.environment th:first-child {
+            width: 30%;
+        }
+
+        .container {
+            width: 100%;
+            max-width: none;
+            padding-left: 0px;
+            padding-bottom: 30px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            display: block;
+            font-size: 1.5em;
+            margin-block-start: 0.83em;
+            margin-block-end: 0.83em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            font-weight: bold;
+        }
+
+        span {
+            pointer-events: none;
+        }
+
+        td {
+            word-break: normal;
+        }
+
+
+    </style>
+    <style>
+        body {
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        #summary {
+            width:100%;
+            margin-bottom: 20px;
+        }
+
+        #summary th {
+            background-color: skyblue;
+            padding: 5px 12px;
+        }
+
+        #summary td {
+            background-color: lightblue;
+            text-align: center;
+            padding: 4px 8px;
+        }
+
+        #url_elapsed_total_seconds {
+            width:100%;
+            margin-bottom: 20px;
+        }
+
+        #url_elapsed_total_seconds th {
+            background-color: skyblue;
+            padding: 5px 12px;
+        }
+
+        #url_elapsed_total_seconds td {
+            background-color: lightblue;
+            text-align: center;
+            padding: 4px 8px;
+        }
+
+
+        .details {
+            width: 100%px;
+            margin-bottom: 20px;
+        }
+
+        .details th {
+            background-color: skyblue;
+            padding: 5px 12px;
+        }
+
+        .details tr .passed {
+            background-color: lightgreen;
+        }
+
+        .details tr .failed {
+            background-color: red;
+        }
+
+        .details tr .unchecked {
+            background-color: gray;
+        }
+
+        .details td {
+            background-color: lightblue;
+            padding: 5px 12px;
+        }
+
+        .details .detail {
+            background-color: lightgrey;
+            font-size: smaller;
+            padding: 5px 10px;
+            line-height: 20px;
+            text-align: left;
+        }
+
+        .details .success {
+            background-color: greenyellow;
+        }
+
+        .details .error {
+            background-color: red;
+        }
+
+        .details .failure {
+            background-color: salmon;
+        }
+
+        .details .skipped {
+            background-color: gray;
+        }
+
+        .button {
+            font-size: 1em;
+            padding: 6px;
+            width: 4em;
+            text-align: center;
+            background-color: #06d85f;
+            border-radius: 20px/50px;
+            cursor: pointer;
+            transition: all 0.3s ease-out;
+        }
+
+        a.button {
+            color: gray;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background: #2cffbd;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            transition: opacity 500ms;
+            visibility: hidden;
+            opacity: 0;
+            line-height: 25px;
+        }
+
+        .overlay:target {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .popup {
+            margin: 70px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            width: 50%;
+            position: relative;
+            transition: all 3s ease-in-out;
+        }
+
+        .popup h2 {
+            margin-top: 0;
+            color: #333;
+            font-family: Tahoma, Arial, sans-serif;
+        }
+
+        .popup .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            transition: all 200ms;
+            font-size: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .popup .close:hover {
+            color: #06d85f;
+        }
+
+        .popup .content {
+            max-height: 80%;
+            overflow: auto;
+            text-align: left;
+            height: 500px;
+        }
+
+        .popup .separator {
+            color: royalblue
+        }
+
+        @media screen and (max-width: 700px) {
+            .box {
+                width: 70%;
+            }
+
+            .popup {
+                width: 70%;
+            }
+        }
+
+        #testreport {
+            background-color: #f1f2f7;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            top: 35px;
+            left: 230px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .slide-item h3{
+            font-size: 12px 
+        }
+    </style>
+
+
+</head>
+<body class="modal-open">
+        <form enctype="multipart/form-data" id="upload_project_info">
+            <div class="modal fade" id="bulk_uploadcase" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">{{WEB_NAME}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input name="upload" id="uploadfile" type="file" class="file" multiple/>
+                            <div id="kartik-file-errors"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group col-md-8" style="margin-left: 15px">
+                                <div class="input-group-addon" style="color: #0a628f">所属项目</div>
+                                <select id='project' name="project" class="form-control"
+                                        onchange="auto_load('#upload_project_info', '/Index/get_project_info/', '#upload_belong_module_id', 'module')">
+                                    <option value="请选择">请选择</option>
+                                    {% for foo in project %}
+                                        <option value="{{ foo.project_name }}">{{ foo.project_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group col-md-8" style="margin-left: 15px">
+                                <div class="input-group-addon" style="color: #0a628f">所属模块</div>
+                                <select id="upload_belong_module_id" name="module" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+        </form>
+        
+        <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+            <div class="am-modal-dialog">
+                <div class="am-modal-hd">{{WEB_NAME}}</div>
+                <div class="am-modal-bd" id="my-alert_print">
+                    {{ WARRING}}
+                </div>
+                <div class="am-modal-footer">
+                    <span class="am-modal-btn">确定</span>
+                </div>
+            </div>
+        </div>
+        <div class="am-cf admin-main">
+        
+            <div class="nav-navicon admin-main admin-sidebar">
+        
+        
+                <div class="sideMenu am-icon-dashboard" style="color:#aeb2b7; margin: 10px 0 0 0;"> 欢迎您：{{ account }} &nbsp;&nbsp;<a
+                        href='/Login/log_out/' style="font-size: 16px;" >注销</a></div>
+                <div class="sideMenu">
+                        <div class="slide-item">
+                    <h3 class="am-icon-folder"><em></em> <a href="#">项目管理</a></h3>
+                    <ul>
+                        <li><a href="{{PROJECT_LIST_URL}}/1/">项 目 列 表</a></li>
+                        <li><a href="{{ADD_PROJECT_URL}}/">新 增 项 目</a></li>
+                        <li><a href="{{DEBUG_TALK_LIST_URL}}/1/">debugtalk.py</a></li>
+                    </ul>
+                    </div>
+                    <div class="slide-item">
+                    <h3 class="am-icon-th-list"><em></em> <a href="#"> 模块管理</a></h3>
+                    <ul>
+                        <li><a href="{{MODULE_LIST_URL}}/1/">模 块 列 表</a></li>
+                        <li><a href="{{ADD_MODULE_URL}}/">新 增 模 块</a></li>
+                    </ul>
+                    </div>
+                    <div class="slide-item">
+                    <h3 class="am-icon-bug"><em></em> <a href="#">用例管理</a></h3>
+                    <ul>
+                        <li><a href="{{ADD_CASE_URL}}/">新 增 用 例</a></li>
+                        <li><a href="{{TEST_LIST_URL}}/1/">用 例 列 表</a></li>
+                    </ul>
+                    </div>
+                    <div class="slide-item">
+                    <h3 class="am-icon-tags"><em></em> <a href="#">配置管理</a></h3>
+                    <ul>
+                        <li><a href="{{ADD_CONFIG_URL}}/">新 增 配 置</a></li>
+                        <li><a href="{{CONFIG_LIST_URL}}/1/">配 置 列 表</a></li>
+                    </ul>
+                    </div>
+                    <div class="slide-item">
+                    <h3 class="am-icon-soundcloud"><em></em> <a href="#">测试计划</a></h3>
+                    <ul>
+                        <li><a href="{{SUITE_LIST_URL}}/1/">测 试 套 件</a></li>
+                        <li><a href="{{PERIODICT_TASK_URL}}/1/">定 时 任 务</a></li>
+                    </ul>
+                    </div>
+
+                    <div class="slide-item">
+                    <h3 class="am-icon-jsfiddle"><em></em> <a href="#">报告管理</a></h3>
+                    <ul>
+                        <li><a href="{{REPORT_LIST_URL}}/1/">查看报告</a></li>
+                    </ul>
+                    </div>
+                    <div class="slide-item">
+                    <h3 class="am-icon-gears"><em></em> <a href="#">辅助工具</a></h3>
+                    <ul>
+                        <li><a href="{{ENV_LIST_URL}}/1/">运 行 环 境</a></li>
+                    </ul>
+                    </div>
+                </div>
+                <!-- sideMenu End -->
+            </div>
+        
+            <div class="daohang">
+                <ul>
+                    <li>
+                        <button type="button" class="am-btn am-btn-default am-radius am-btn-xs"
+                                onclick="location='{{ INDEX_URL }}'">返回首页
+                            <a href="{{INDEX_URL}}" class="am-close am-close-spin">~</a></button>
+                    </li>
+                    <li>
+                        <button type="button" class="am-btn am-btn-default am-radius am-btn-xs"
+                                onclick="location='{{PROJECT_LIST_URL}}/1/'">项目列表<a
+                                href="{{PROJECT_LIST_URL}}/1/" class="am-close am-close-spin">~</a>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="am-btn am-btn-default am-radius am-btn-xs"
+                                onclick="location='{{MODULE_LIST_URL}}/1/'">模块列表<a
+                                href="{{MODULE_LIST_URL}}/1/" class="am-close am-close-spin">~</a>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="am-btn am-btn-default am-radius am-btn-xs"
+                                onclick="location='{{TEST_LIST_URL}}/1/'">用例列表<a
+                                href="{{TEST_LIST_URL}}/1/" class="am-close am-close-spin">~</a>
+                        </button>
+                    </li>
+        
+                    <li>
+                        <button type="button" class="am-btn am-btn-default am-radius am-btn-xs"
+                                onclick="location='{{ADD_CONFIG_URL}}/'">新增配置<a
+                                href="{{ADD_CONFIG_URL}}/" class="am-close am-close-spin">~</a>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="am-btn am-btn-default am-radius am-btn-xs"
+                                onclick="location='{{ADD_CASE_URL}}/'">新增用例<a
+                                href="{{ADD_CASE_URL}}/" class="am-close am-close-spin">~</a>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="am-btn am-btn-default am-radius am-btn-xs"
+                                onclick="location='{{ADD_SUITE_URL}}'">新增Suite<a
+                                href="{{ADD_SUITE_URL}}" class="am-close am-close-spin">~</a>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="am-btn am-btn-default am-radius am-btn-xs"
+                                onclick="location='{{ADD_TASK_URL}}'">新增任务<a
+                                href="{{ADD_TASK_URL}}" class="am-close am-close-spin">~</a>
+                        </button>
+                    </li>
+        
+                </ul>
+            </div>
+                <!-- 开始 -->
+
+                <div id="testreport">
+                        <!-- {% load set_val %} -->
+                        <h1>Test Report: {{html_report_name}}</h1>
+
+                        <div style="float: left;">
+                            <button id="create_testcase" type="button" class="button"
+                                style="width: 100px;height: 60px;cursor: pointer;background-color: dodgerblue;font-size: 1em;padding: 6px;text-align: center;background-color: #06d85f;border-radius: 20px/50px;cursor: pointer;transition: all 0.3s ease-out;color: black;font-size: 16px;">生成相关测试用例文件</button>
+                               
+                        </div>
+                               
+                        <div style="float: left;">
+                            <a class="button" id="upload_testcase" href="/static/export/接口测试用例.xlsx" 
+                                style="width: 100px;height: 60px;cursor: pointer;background-color: dodgerblue;font-size: 1em;padding: 6px;text-align: center;background-color: #06d85f;border-radius: 20px/50px;cursor: pointer;transition: all 0.3s ease-out;display: none;color: black;font-size: 16px;margin-left: 100px;">下载相关测试用例文件</a>
+                            
+                        </div>
+                        <div style="width: 100px;height: 80px;">
+
+                        </div>
+            
+                        <h2>Summary</h2>
+            
+                        <!-- container -->
+                        <div class='container' style="padding-right: 0px;">
+            
+                            <div id='test-view' class='view'>
+            
+                                <div id='test-view-charts' class='subview-full'>
+                                    <div id='test-view-charts' class='subview-full'>
+                                        <div id='charts-row' class='row nm-v nm-h'>
+            
+                                            <div class='col s12 m6 l6 np-h'>
+                                                <div class='card-panel nm-v'>
+                                                    <div class='left panel-name'>TESTCASES</div>
+                                                    <div class='chart-box'>
+                                                        <canvas id='child-analysis' width='100' height='80'></canvas>
+                                                    </div>
+                                                    <div class='block text-small'>
+                                                        <span id="pass_suites" class='tooltipped'>
+                                                        </span>
+                                                    </div>
+                                                    <div class='block text-small'>
+                                                        testcase(s)&nbsp;failed
+                                                        <span id="fail_suites" class='strong tooltipped'></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='col s12 m6 l6 np-h'>
+                                                <div class='card-panel nm-v'>
+                                                    <div class='left panel-name'>TESTSTEPS</div>
+                                                    <div class='chart-box'>
+                                                        <canvas id='parent-analysis' width='100' height='80'></canvas>
+                                                    </div>
+                                                    <div class='block text-small'>
+                                                        <span class='strong tooltipped'>
+                                                            passed&nbsp;<span
+                                                                class='strong tooltipped'>{{ stat.teststeps.successes }}</span></span>
+                                                        <span class='strong tooltipped'>
+                                                            failed&nbsp;<span
+                                                                class='strong tooltipped'>{{ stat.teststeps.failures }}</span></span>
+                                                        <span class='strong tooltipped'>
+                                                            errored&nbsp;<span
+                                                                class='strong tooltipped'>{{ stat.teststeps.errors }}</span></span>
+                                                        <span class='strong tooltipped'>
+                                                            skipped&nbsp;<span
+                                                                class='strong tooltipped '>{{ stat.teststeps.skipped }}</span></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+            
+            
+            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- subview right -->
+                            <!-- test view -->
+                            <!-- dashboard view -->
+                            <!-- testrunner-logs view -->
+                            <!-- container -->
+                        </div>
+            
+            <div id="main" style="width: 100%;">
+                        <table id="summary">
+                            <tr>
+                                <th>START AT</th>
+                                <td colspan="4">{{time.start_datetime}}</td>
+                            </tr>
+                            <tr>
+                                <th>DURATION</th>
+                                <td colspan="4">{{ time.duration|floatformat:3}} seconds</td>
+                            </tr>
+                            <tr>
+                                <th>PLATFORM</th>
+                                <td>HttpRunner {{ platform.httprunner_version }} </td>
+                                <td>{{ platform.python_version }} </td>
+                                <td colspan="2">{{ platform.platform }}</td>
+                            </tr>
+                            <tr>
+                                <th>STAT</th>
+                                <th colspan="2">TESTCASES (success/fail)</th>
+                                <th colspan="2">TESTSTEPS (success/fail/error/skip)</th>
+                            </tr>
+                            <tr>
+                                <td>total (details) =></td>
+                                <td colspan="2">{{stat.testcases.total}} ({{stat.testcases.success}}/{{stat.testcases.fail}})</td>
+                                <td colspan="2">{{stat.teststeps.total}}
+                                    ({{stat.teststeps.successes}}/{{stat.teststeps.failures}}/{{stat.teststeps.errors}}/{{stat.teststeps.skipped}})
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                        <h2>elapsed_total_seconds</h2>
+                        <table id="url_elapsed_total_seconds"                      >
+                            <thead>
+                                <tr>
+                                  <th>url</th>
+                                  <th>elapsed_total_seconds</th>
+                                </tr>
+                            </thead>
+                            <tbody id="elapsed_total_seconds">
+    
+                            </tbody>
+                        </table>
+
+
+                        <h2>Details</h2>
+            
+                        {% for test_suite_summary in details %}
+                        {% set suite_index = forloop.counter %}
+            
+                        <h3>{{test_suite_summary.name}}</h3>
+                        <table id="suite_{{suite_index}}" class="details">
+                            <tr>
+                                <td>TOTAL:&nbsp;{{test_suite_summary.stat.total}}</td>
+                                <td>SUCCESS:&nbsp;{{test_suite_summary.stat.successes}}</td>
+                                <td>FAILED:&nbsp;{{test_suite_summary.stat.failures}}</td>
+                                <td>ERROR:&nbsp;{{test_suite_summary.stat.errors}}</td>
+                                <td>SKIPPED:&nbsp;{{test_suite_summary.stat.skipped}}</td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <th colspan="2">Name</th>
+                                <th>Response Time</th>
+                                <th>Detail</th>
+                            </tr>
+            
+                            {% for record in test_suite_summary.records %}
+                            {#    {% set record_index = "{}_{}".format(suite_index,forloop.counter) %}#}
+                            {#        {{ suite_index }}_{{forloop.counter }}#}
+                            {% set record_meta_datas = record.meta_datas_expanded %}
+            
+                            <tr id="record_{{ suite_index }}_{{ forloop.counter }}">
+                                <th class="{{record.status}}  status" style="width:5em;" >{{record.status}}</th>
+                                <td colspan="2" class="test_name" >{{record.name}}</td>
+                                <td style="text-align:center;width:6em;" class="response_time" >{{ record.response_time }} ms</td>
+                                <td class="detail">
+            
+                                    {% for meta_data in record_meta_datas %}
+                                    {#        {% set meta_data_index = "{}_{}".format(record_index, forloop.counter) %}#}
+                                    {#            {{ suite_index }}_{{ parentloop.counter }}_{{ forloop.counter }}#}
+
+                                    <a class="button"
+                                        href="#popup_log_{{ suite_index }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}">log-{{forloop.counter}}</a>
+                                    <div id="popup_log_{{ suite_index }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}"
+                                        class="overlay">
+                                        <div class="popup">
+                                            <h2>Request and Response data</h2>
+                                            <a class="close"
+                                                href="#record_{{ suite_index }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}">&times;</a>
+            
+                                            <div class="content">
+                                                <h3>Name: {{ meta_data.name }}</h3>
+            
+                                                {% for req_resp in meta_data.data %}
+            
+                                                {% if forloop.counter > 1 %}
+                                                <div class="separator">==================================== redirect to
+                                                    ====================================</div>
+                                                {% endif %}
+            
+                                                <h3>Request:</h3>
+                                                <div style="overflow: auto" ">
+                                                    <table class="request_table">
+                                                        {% for key, value in req_resp.request.items %}
+                                                        <tr>
+                                                            <th>{{key}}</th>
+                                                            {% if key == "url" %}
+                                                            <td class="request_url" style="display: none;">{{value}}</td>
+                                                            {% endif %}
+                                                            <td class="{{key}}">
+                                                                {% if key == "headers" or key == "body" %}
+                                                                <pre>{{ value }}</pre>
+                                                                {% else %}
+                                                                {{value}}
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </table>
+                                                </div>
+            
+                                                <h3>Response:</h3>
+                                                <div style="overflow: auto">
+                                                    <table class="response_table">
+                                                        {% for key, value in req_resp.response.items %}
+                                                        <tr>
+                                                            <th>{{key}}</th>
+                                                            <td class="{{key}}" >
+                                                                {% if key  == "headers" %}
+                                                                <pre>{{ value}}</pre>
+                                                                {% elif key == "body" %}
+                                                                {% if "image" in req_resp.response.content_type %}
+                                                                <img src="{{ req_resp.response.content }}" />
+                                                                {% else %}
+                                                                <pre>{{ value}}</pre>
+                                                                {% endif %}
+                                                                {% else %}
+                                                                {{ value }}
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </table>
+                                                </div>
+                                                {% endfor %}
+            
+                                                <h3>Validators:</h3>
+                                                <div style="overflow: auto">
+                                                    {% set validate_extractors = meta_data.validators %}
+                                                    {% if validate_extractors %}
+                                                    <table class="validators">
+                                                        <tr>
+                                                            <th>check</th>
+                                                            <th>comparator</th>
+                                                            <th>expect value</th>
+                                                            <th>actual value</th>
+                                                        </tr>
+                                                        {% for validator in validate_extractors %}
+                                                        <tr>
+                                                            {% if validator.check_result == "pass" %}
+                                                            <td class="passed validators_check">
+                                                                {% elif validator.check_result == "fail" %}
+                                                            <td class="failed validators_check">
+                                                                {% elif validator.check_result == "unchecked" %}
+                                                            <td class="unchecked check">
+                                                                {% endif %}
+                                                                {{validator.check }}
+                                                            </td>
+                                                            <td class="comparator">{{validator.comparator}}</td>
+                                                            <td class="expect">{{validator.expect }}</td>
+                                                            <td class="check_value">{{validator.check_value}}</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </table>
+                                                    {% endif %}
+            
+                                                    {% set validate_script = meta_data.validators.validate_script %}
+                                                    {% if mvalidate_script %}
+                                                    <table>
+                                                        <tr>
+                                                            <th>validate script</th>
+                                                            <th>exception</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{validate_script.validate_script | safe}}</td>
+                                                            {% if validate_script.check_result == "pass" %}
+                                                            <td class="passed">
+                                                                {% elif validate_script.check_result == "fail" %}
+                                                            <td class="failed">
+                                                                {% endif %}
+                                                                {{validate_script.exception}}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    {% endif %}
+                                                </div>
+            
+                                                <h3>Statistics:</h3>
+                                                <div style="overflow: auto">
+                                                    <table>
+                                                        <tr>
+                                                            <th>content_size(bytes)</th>
+                                                            <td>{{ meta_data.stat.content_size }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>response_time(ms)</th>
+                                                            <td>{{ meta_data.stat.response_time_ms }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>elapsed(ms)</th>
+                                                            <td class="elapsed_ms" >{{ meta_data.stat.elapsed_ms }}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+            
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+            
+                                    {% if record.attachment %}
+                                    <a class="button" href="#popup_attachment_{{record_index}}">traceback</a>
+                                    <div id="popup_attachment_{{record_index}}" class="overlay">
+                                        <div class="popup">
+                                            <h2>Traceback Message</h2>
+                                            <a class="close" href="#record_{{record_index}}">&times;</a>
+                                            <div class="content">
+                                                <pre>{{ record.attachment}}</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+            
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        {% endfor %}
+            
+            
+            
+            
+                        <script>
+                            var test_suite_success = 0;
+                            {% for test_suite_summary in details %}
+                            {% if test_suite_summary.success == True %}
+                            test_suite_success = test_suite_success + 1;
+                            {% endif %}
+                            {% endfor %}
+            
+                            var statusGroup = {
+                                passParent: {{ stat.teststeps.successes }},
+                            failParent: {{ stat.teststeps.failures }},
+                            fatalParent: 0,
+                                errorParent: {{ stat.teststeps.errors }},
+                            warningParent: 0,
+                                skipParent: {{ stat.teststeps.skipped }},
+                            exceptionsParent: 0,
+            
+                                passChild: test_suite_success,
+                                    failChild: {{ details | length }} -test_suite_success,
+                                        fatalChild: 0,
+                                            errorChild: 0,
+                                                warningChild: 0,
+                                                    skipChild: 0,
+                                                        infoChild: 0,
+                                                            exceptionsChild: 0,
+            
+                                                                passGrandChild: 0,
+                                                                    failGrandChild: 0,
+                                                                        fatalGrandChild: 0,
+                                                                            errorGrandChild: 0,
+                                                                                warningGrandChild: 0,
+                                                                                    skipGrandChild: 0,
+                                                                                        infoGrandChild: 0,
+                                                                                            exceptionsGrandChild: 0,
+                  };
+                            document.getElementById('pass_suites').innerHTML = "</span> testcase(s) passed" + "<span class='strong'>" + test_suite_success;//找到id为'myId'的标签内插入html变量的值
+                            document.getElementById('fail_suites').innerText = {{ details | length }} -test_suite_success;//找到id为'myId'的标签替换它的内容为html的值
+            
+                        </script>
+                        <script src="{% static 'extentreports.com/resx/dist/js/extent.js' %}" type='text/javascript'></script>
+            
+            
+                        <script type='text/javascript'>
+                            $(window).off("keydown");
+                // $(window).off("mouseover");
+                // $(window).off("mouseout");
+                // // $("span").unbind('')mouseover(function(event) {
+                // //   return false;
+                // //   });
+            
+            
+                // // $("span").mouseout(function(event) {
+                // //   return false;
+                // // 	});
+                        </script>
+            
+                    </div>
+                    <!-- 结束 -->
+        
+        </div>
+
+        <script>
+            window.onload = function () {
+                var request_url = document.getElementsByClassName("request_url");
+                var elapsed_ms = document.getElementsByClassName("elapsed_ms");
+                var elapsed_total_seconds= document.getElementById("elapsed_total_seconds");
+                elapsed_total_seconds.innerHTML="";
+                data={};
+                data[request_url[0].innerHTML]=elapsed_ms[0].innerHTML
+                
+                //去重，相同url取响应时间最长那个
+                for (let index = 0; index < request_url.length; index++) {
+
+                    if(data.hasOwnProperty(request_url[index].innerHTML))
+                    {
+                        // 比较取最大值
+                        var num1=parseFloat(data[request_url[index].innerHTML].trim());
+                        var num2=parseFloat(elapsed_ms[index].innerHTML.trim());
+
+                        if(num1<num2)
+                        { 
+
+                            data[request_url[index].innerHTML]=elapsed_ms[index].innerHTML;
+                        }
+
+                    
+                    }
+                    else{
+                        // 加进去
+                        data[request_url[index].innerHTML]=elapsed_ms[index].innerHTML;
+                    }
+
+                    
+
+                }
+                // console.log(data);
+
+                // 遍历data
+
+                for (var item in data) {
+
+                    var num=parseFloat(data[item].trim());
+                    num=num/1000;
+                    var str="<tr><td class='elapsed_url'>"+item.trim()+"</td><td class='max_response_time'>"+num+"</td></tr>";
+                    elapsed_total_seconds.innerHTML= elapsed_total_seconds.innerHTML+str;
+                }
+            }
+        </script>
+            <script>
+                $("#create_testcase").click(function () {
+
+
+
+    
+        
+                    $.ajax({
+                        type: 'post',
+                        url: "/Index/export_testcase/",
+                        data: get_data(),
+                        contentType: "application/json",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data) {
+                            console.log(data);
+                            $("#upload_testcase").show();
+        
+                        }
+                        ,
+                        error: function () {
+                            myAlert('Sorry，服务器可能开小差啦, 请重试!');
+                        }
+                    });
+                });
+            </script>
+            <script>
+                    function get_data() {
+
+                        var data = document.getElementsByClassName("status");
+                        var test_name = document.getElementsByClassName("test_name");
+                        var response_time = document.getElementsByClassName("response_time");
+                        var request_headers = $(".request_table").find(".headers pre");
+                        var request_body = $(".request_table").find(".body pre");
+                        var response_headers = $(".response_table").find(".headers pre");
+                        var response_text = $(".response_table").find(".text");
+                        var request_url = document.getElementsByClassName("request_url");
+
+                        var count = {
+                            TESTSTEPS: {
+                                success: "{{ stat.teststeps.successes }}",
+                                fail: "{{stat.teststeps.failures }}",
+                                "error": "{{ stat.teststeps.errors }}",
+                                "skip": "{{ stat.teststeps.skipped }}"
+                            }
+                        };
+                        var elapsed_url= document.getElementsByClassName("elapsed_url");
+                        var max_response_time=document.getElementsByClassName("max_response_time");
+                        var elapsed_total_seconds=[];
+
+
+                        for (let j = 0; j < elapsed_url.length; j++) {
+                                var temp = {};
+                                temp.elapsed_url = $.trim(elapsed_url[j].innerHTML);
+                                temp.max_response_time = $.trim(max_response_time[j].innerHTML);
+                                elapsed_total_seconds.push(temp);
+
+                            }
+                        count.elapsed_total_seconds=elapsed_total_seconds;
+                        var data_count={};
+                        data_count.count=count;
+
+
+                        var validators_temp = $(".validators");
+                        var data_test = [];
+
+                        
+
+                        data_test.push(data_count);
+
+
+
+                        for (let index = 0; index < data.length; index++) {
+                            var temp_test = {};
+                            var test = {};
+
+
+                            test.status = $.trim(data[index].innerHTML);
+                            test.name = $.trim(test_name[index].innerHTML);
+                            test.request = {};
+                            test.request.request_headers = $.trim(request_headers[index].innerHTML).replace(/\'/g, '"');
+                            
+                            //判断request_body的length是否比data的length小
+                            if(index >= (request_body.length-1))
+                            {
+                                test.request.request_body="";
+                            }
+                            else{
+                                test.request.request_body = $.trim(request_body[index].innerHTML).replace(/\'/g, '"');
+
+                            }
+
+                            
+
+
+                            test.response = {};
+                            test.response.response_headers = $.trim(response_headers[index].innerHTML).replace(/\'/g, '"');
+
+                            //response_text的length是否比data的length小
+                            if(index >= (response_text.length-1))
+                            {
+                                test.response.response_text="";
+                            }
+                            else{
+                                test.response.response_text = $.trim(response_text[index].innerHTML).replace(/\'/g, '"');
+
+                            }
+
+
+
+                            
+                            test.url = $.trim(request_url[index].innerHTML);
+
+
+                            var temp_comparator = $(validators_temp[index]).find(".comparator");
+                            var temp_expects = $(validators_temp[index]).find(".expect");
+                            var temp_check_value = $(validators_temp[index]).find(".validators_check");
+                            var temp_actual = $(validators_temp[index]).find(".check_value");
+
+                            var validators = [];
+
+                            for (let j = 0; j < temp_comparator.length; j++) {
+                                var temp = {};
+                                temp.comparator = $.trim(temp_comparator[j].innerHTML).replace(/\'/g, '"');
+                                temp.expect = $.trim(temp_expects[j].innerHTML).replace(/\'/g, '"');
+                                temp.actual = $.trim(temp_actual[j].innerHTML).replace(/\'/g, '"');
+                                temp.check = $.trim(temp_check_value[j].innerHTML).replace(/\'/g, '"');
+                                validators.push(temp);
+
+                            }
+
+                            test.validators = validators;
+                            temp_test.test = test;
+                            data_test.push(temp_test);
+
+
+                        }
+
+                        console.log(JSON.stringify(data_test));
+                        return JSON.stringify(data_test);
+
+                    }
+
+
+
+            </script>
+            
+                
+
+
+
+        
+        </body>
+</html>

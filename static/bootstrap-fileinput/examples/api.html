@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!-- release v4.5.3, copyright 2014 - 2019 Kartik Visweswaran -->
+<!--suppress JSUnresolvedLibraryURL -->
+<html lang="en">
+<head>
+	<meta charset="UTF-8"/>
+	<title>api新增</title>
+
+	<link href="./static/cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+
+	<link href="../css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+	      crossorigin="anonymous">
+	<link href="../themes/explorer-fas/theme.css" media="all" rel="stylesheet" type="text/css"/>
+    <script src="./static/cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="./static/cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js">
+	<script src="../js/plugins/piexif.js" type="text/javascript"></script>
+	<script src="../js/plugins/sortable.js" type="text/javascript"></script>
+	<script src="../js/fileinput.js" type="text/javascript"></script>
+	<script src="../js/locales/zh.js" type="text/javascript"></script>
+	<script src="../themes/fas/theme.js" type="text/javascript"></script>
+	<script src="../themes/explorer-fas/theme.js" type="text/javascript"></script>
+</head>
+<body>
+    <form enctype="multipart/form-data">
+<div class="file-loading">
+    <input id="input_apifile" name="input_apifile"  multiple="multiple" type="file"  data-allowed-file-extensions='["json", "yml","yaml"]' data-theme="fas"	/>
+</div>
+</form>
+</body>
+<script>
+    
+    $(document).ready(function () {
+
+
+
+		$('#input_apifile').fileinput({
+        theme: 'fas',
+        language: 'zh',
+		minFileCount: 1,
+        enctype : 'multipart/form-data',
+        uploadUrl:"http://127.0.0.1:88/Index/api_file"
+        });
+
+
+        $("#input_apifile").on("fileuploaded", function (event, data, previewId, index) {
+
+        // var response = data.response;
+        // alert(response.filePath);
+        // $("#fileMd5").val(response.fileMd5);
+        // $("#version").val(response.newVersionName);
+        // $("#url").val(response.filePath);
+       
+    });
+
+
+
+
+        
+
+         
+    });
+</script>
+</html>

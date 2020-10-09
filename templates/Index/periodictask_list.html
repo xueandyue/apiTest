@@ -1,0 +1,571 @@
+{% extends "base.html" %}
+{% block title %}定时任务{% endblock %}
+{% load staticfiles %}
+{% load custom_tags %}
+{% block content %}
+
+<link href="{% static 'switch/bootstrap-switch.min.css' %}" rel="stylesheet" type="text/css" />
+<script src="{% static 'switch/bootstrap-switch.min.js' %}" type="text/javascript"></script>
+<script type="text/javascript">
+    var api_swith = true;
+    $(function () {
+        $('[name="checkbox-name"]').bootstrapSwitch({
+        onText: '启用',
+        offText: '停止',
+        // onColor: "success",
+        offColor: "danger",
+        size: "small", 
+        onSwitchChange: function (event, state) {
+            var name=$.trim($(this).attr("data_name"));
+            if (state == true) {
+
+                
+
+                
+                task_set(name,true);
+
+            } else {
+                
+                //停用
+                task_set(name,false);
+            }
+        }
+    });
+
+    $('[name="checkbox-name"]').each(function(index, el) {
+    
+    var status=$.trim($(this).attr("init_status"));
+    if(status=="启用")
+    {
+        $(this).bootstrapSwitch('state', true,true);
+    
+    }else{
+    
+        $(this).bootstrapSwitch('state', false,true);
+    
+    }
+        
+    });
+
+
+    
+
+
+
+
+    });
+
+</script>
+
+
+
+<!-- <div class="am-modal am-modal-confirm" tabindex="-1" id="task_modal"  style="top: 10%;" >
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">接口测试自动化平台</div>
+        <form class="form-horizontal" id="task">
+    
+            <div class="form-group">
+                <div class="input-group col-md-10 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">任务类型</div>
+                    <select name="mode" class="form-control" id="mode" style="font-size: 12px;">
+                        <option value="1">Project or Module</option>
+                        <option value="2">Test Suite</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-10 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">任务名称</div>
+                    <input type="text" class="form-control" id="name" name="name" value=""
+                           placeholder="定时任务名称" style="font-size: 12px;" >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-10 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">运行环境</div>
+                    <select name="base_url" class="form-control">
+                        <option value="">自带环境</option>
+                        {% for foo in  env %}
+                            <option value="{{ foo.base_url }}">{{ foo.env_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-10 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">可选项目</div>
+                    <select id="project" name="project" class="form-control">
+                        <option value="">请选择</option>
+                        {% for foo in  project %}
+                            <option value="{{ foo.project_name }}">{{ foo.project_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-10 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">可选模块</div>
+                    <select id="belong_module_id" class="form-control" name="module">
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-10 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">定时配置</div>
+                    <input type="text" class="form-control" id="crontab_time" name="crontab_time"
+                           placeholder="crontab表达式 例如： 11 * * * *" value="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-10 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">接收邮件</div>
+                    <input type="text" class="form-control" id="receiver" name="receiver"
+                           placeholder="xx@qq.com, xx@163.com 为空不发送报告" value="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-10 col-md-offset-1">
+                    <div class="input-group-addon" id="close_collapse" style="color: #0a628f">任务列表</div>
+
+                    <a class="am-btn am-btn-primary am-radius am-btn-block" href="#" id="pre_collapse"
+                       style="font-size: 16px; background-color: #fff; color: #555; text-align: left"
+                       data-am-collapse="{target: '#pre_case'}">
+                        任 务 执 行 顺 序
+                    </a>
+                    <nav>
+                        <ul id="pre_case" class="am-nav am-collapse">
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <a class="btn btn-primary" onclick="info_ajax('#add_task', '{{ADD_TASK_URL}}')">点 击 提 交
+                    </a>
+
+                </div>
+            </div>
+
+        </form>
+        
+        
+
+        </div>
+
+
+
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+            <span class="am-modal-btn" id="select_case_confirm">确定</span>
+        </div>
+    </div> -->
+
+
+<div class="am-modal am-modal-confirm" tabindex="-1" id="my-invalid" style="position: relative;margin-top: 10%;">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">{{WEB_NAME}}</div>
+        <div class="am-modal-bd">
+            亲，确定删除该定时任务么？
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+            <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+        </div>
+    </div>
+</div>
+
+<div class="admin-biaogelist">
+    <div class="listbiaoti am-cf">
+        <ul class="am-icon-flag on"> 任务管理</ul>
+        <dl class="am-icon-home" style="float: right;"> 当前位置： 辅助工具 > <a href="#">定时任务</a></dl>
+        <dl>
+            <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus"
+                onclick="location='{{ADD_TASK_URL}}'">新增任务
+            </button>
+        </dl>
+    </div>
+
+    <div class="am-btn-toolbars am-btn-toolbar am-kg am-cf">
+        <form id="pro_filter" method="post" action="{{PERIODICT_TASK_URL}}/1/">
+            <ul>
+                <li style="padding-top: 5px"><input value="{{ info.name }}" type="text" name="name"
+                        class="am-input-sm am-input-xm" placeholder="任务名称" /></li>
+                <li>
+                    <button class="am-btn am-radius am-btn-xs am-btn-success" style="margin-top: 9px;">查询
+                    </button>
+                </li>
+            </ul>
+        </form>
+    </div>
+
+    <!-- <div class="switch" data-on-label="SI" style="float: left;">
+        <input type="checkbox" checked name="checkbox-name" />
+    </div> -->
+
+    <form class="am-form am-g" id="task_list" name="task_list" method="post" action="/Index/run_batch_test/">
+        <table width="100%" class="am-table am-table-bordered am-table-radius am-table-striped">
+            <thead>
+                <tr class="am-success">
+                    <!-- <th class="table-check"><input type="checkbox" id="select_all" /></th> -->
+                    <th class="table-title" style="display: none;">ID</th>
+                    <th class="table-set" style="display: none;">状态</th>
+                    <th class="table-type">CRONTAB表达式<br />(m/h/d/dM/MY)</th>
+                    <th class="table-title">任务名称</th>
+                    <!-- <th class="table-title">关键字参数</th> -->
+                    <th class="table-date">修改时间</th>
+                    <!--<th class="table-date am-hide-sm-only">DATE_CHANGED</th>-->
+                    <th width="200px" class="table-set">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for foo in task %}
+                {% if foo.name != 'celery.backend_cleanup' %}
+                <tr>
+                    <!-- <td><input type="checkbox" name="task_{{ foo.id }}" value="{{ foo.id }}" /></td> -->
+                    <td style="display: none;" >{{ forloop.counter }}</td>
+                    <!-- {% if foo.enabled == True %}
+                    <td>启用</td>
+                    {% else %}
+                    <td>停止</td>
+                    {% endif %} -->
+                    <td style="color: #3b87ee">{{ foo.description }}</td>
+                    <td class="task_name">{{ foo.name }}</td>
+                    <td class="real_name" style="display: none;">{{ foo.kwargs }}</td>
+                    <td>{{ foo.date_changed }}</td>
+                    <td>
+                        <div class="am-btn-toolbar">
+                            <div class="am-btn-group am-btn-group-xs" style="overflow: hidden;height: 26px;">
+                                    <div class="switch" data-on-label="SI" data-off-label="NO" style="float: left;">
+                                            <input type="checkbox"   name="checkbox-name" data_name="{{foo.name }}" init_status="
+                                            {% if foo.enabled == True %}
+                                            启用
+                                            {% else %}
+                                            停止
+                                            {% endif %}
+                                            " />
+                                            </div>
+                                {#                                        <button type="button"#}
+                                {#                                            class="am-btn am-btn-default am-btn-xs am-text-secondary am-round"#}
+                                {#                                            data-am-popover="{content: '运行', trigger: 'hover focus'}"#}
+                                {#                                            onclick="run_task('{{ foo.id }}', '/Index/run_task/', 'suite')">#}
+                                {#                                        <span class="am-icon-bug"></span>#}
+                                {#                                        </button>#}
+                                <!-- <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary am-round"
+                                    data-am-popover="{content: '开启', trigger: 'hover focus'}"
+                                    onclick="task_set('{{ foo.name }}',true)"> <span
+                                        class="am-icon-toggle-on"></span></button>
+                                <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary am-round"
+                                    data-am-popover="{content: '关闭', trigger: 'hover focus'}"
+                                    onclick="task_set('{{ foo.name }}',false)"> <span
+                                        class="am-icon-toggle-off"></span></button> -->
+                                        
+                                <button style="margin-left: 10px;height: 26px;" type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary am-round"
+                                    data-am-popover="{content: '查看/编辑', trigger: 'hover focus'}"
+                                    onclick=location='/Index/edit_task/{{ foo.id }}/'><span
+                                        class="am-icon-pencil-square-o" ></span></button>
+                                <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-round"
+                                    data-am-popover="{content: '删除', trigger: 'hover focus'}"
+                                    onclick="invalid('{{ foo.name }}')" style="margin-left: 10px;height: 26px;"><span class="am-icon-trash-o"></span></button>
+                                   
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+
+
+            </tbody>
+        </table>
+
+        <div style="overflow: hidden;">
+
+            <ul class="am-pagination am-fr">
+                {{ page_list }}
+            </ul>
+        </div>
+
+
+        <hr />
+    </form>
+
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="select_case">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">接口测试自动化平台</div>
+            <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+                <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择项目:</label>
+                <div class="col-sm-8">
+                    <select class="form-control" id="select_case_project">
+                        <option value="请选择">请选择</option>
+                        {% for foo in project %}
+                        <option value="{{ foo.project_name }}">{{ foo.project_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+                <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择模块:</label>
+                <div class="col-sm-8">
+                    <select class="form-control" id="select_case_moudle">
+                    </select>
+                </div>
+
+            </div>
+            <div class="form-group" style="margin-top: 10px;overflow: hidden;">
+                <label class="control-label col-sm-3" style="font-weight: inherit; font-size: small ">选择用例:</label>
+                <div class="col-sm-8">
+                    <select class="form-control" id="select_case_case">
+                    </select>
+                </div>
+
+            </div>
+
+
+
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" id="select_case_confirm">确定</span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="fbneirong" style="display: none;position: fixed;z-index: 1110;left: 50%;margin-top: 0;top: 50%;">
+
+
+        <form class="form-horizontal" id="add_task">
+
+            <div class="form-group">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">任务类型</div>
+                    <select name="mode" class="form-control" id="mode" style="font-size: 12px;">
+                        <option value="1">Project or Module</option>
+                        <option value="2">Test Suite</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">任务名称</div>
+                    <input type="text" class="form-control" id="name" name="name" value="" placeholder="定时任务名称"
+                        style="font-size: 12px;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">运行环境</div>
+                    <select name="base_url" class="form-control">
+                        <option value="">自带环境</option>
+                        {% for foo in  env %}
+                        <option value="{{ foo.base_url }}">{{ foo.env_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">可选项目</div>
+                    <select id="project" name="project" class="form-control">
+                        <option value="">请选择</option>
+                        {% for foo in  project %}
+                        <option value="{{ foo.project_name }}">{{ foo.project_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">可选模块</div>
+                    <select id="belong_module_id" class="form-control" name="module">
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">定时配置</div>
+                    <input type="text" class="form-control" id="crontab_time" name="crontab_time"
+                        placeholder="crontab表达式 例如： 11 * * * *" value="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <div class="input-group-addon" style="color: #0a628f">接收邮件</div>
+                    <input type="text" class="form-control" id="receiver" name="receiver"
+                        placeholder="xx@qq.com, xx@163.com 为空不发送报告" value="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <div class="input-group-addon" id="close_collapse" style="color: #0a628f">任务列表</div>
+
+                    <a class="am-btn am-btn-primary am-radius am-btn-block" href="#" id="pre_collapse"
+                        style="font-size: 16px; background-color: #fff; color: #555; text-align: left"
+                        data-am-collapse="{target: '#pre_case'}">
+                        任 务 执 行 顺 序
+                    </a>
+                    <nav>
+                        <ul id="pre_case" class="am-nav am-collapse">
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group col-md-4 col-md-offset-1">
+                    <a class="btn btn-primary" onclick="info_ajax('#add_task', '{{ADD_TASK_URL}}')">点 击 提 交
+                    </a>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script type="text/javascript">
+
+        function invalid(name) {
+            $('#my-invalid').modal({
+                relatedTarget: this,
+                onConfirm: function () {
+                    del_data_ajax(name, '{{PERIODICT_TASK_URL}}/1/')
+                },
+                onCancel: function () {
+                }
+            });
+        }
+
+        function edit(id) {
+            $('#task_modal').modal({
+                relatedTarget: this,
+                onConfirm: function () {
+                    del_data_ajax(name, '{{PERIODICT_TASK_URL}}/1/')
+                },
+                onCancel: function () {
+                }
+            });
+        }
+
+
+        function edit_taskrun_task(mode, url) {
+            $('#select_env').modal({
+                relatedTarget: this,
+                onConfirm: function () {
+                    var data = {
+                        "id": $("#suite_list").serializeJSON(),
+                        "env_name": $('#env_name').val(),
+                        "type": type,
+                    };
+                    if (mode !== 'batch') {
+                        data["id"] = mode;
+                    }
+                    if ($('#mode').val() === 'true') {
+                        if (mode === 'batch') {
+                            var json2map = JSON.stringify(data['id']);
+                            var obj = JSON.parse(json2map);
+                            obj['env_name'] = data['env_name'];
+                            obj['type'] = data['type'];
+                            post('/Index/run_batch_test/', obj);
+                        }
+                        else {
+                            post('/Index/run_test/', data);
+                        }
+
+                    } else {
+                        $.ajax({
+                            type: 'post',
+                            url: url,
+                            data: JSON.stringify(data),
+                            contentType: "application/json",
+                            success: function (data) {
+                                myAlert(data);
+                            },
+                            error: function () {
+                                myAlert('Sorry，服务器可能开小差啦, 请重试!');
+                            }
+                        });
+                    }
+                },
+                onCancel: function () {
+                }
+            });
+        }
+        function task_set(id, mode) {
+            var data = {
+                "id": id,
+                'mode': mode
+            };
+            $.ajax({
+                type: 'post',
+                url: '{{PERIODICT_TASK_URL}}/1/',
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: function (data) {
+                    if (data !== 'ok') {
+                        myAlert(data);
+                    }
+                    else {
+                        window.location.reload();
+                    }
+                },
+                error: function () {
+                    myAlert('Sorry，服务器可能开小差啦, 请重试!');
+                }
+            });
+        }
+
+        $('#select_all').click(function () {
+            var isChecked = $(this).prop("checked");
+            $("input[name^='task']").prop("checked", isChecked);
+        })
+
+    </script>
+    <script>
+       var username="{{account}}";
+      $(".task_name").each(function(index, el) {
+        var str=$.trim($(this).text());
+    	if(str.indexOf("send_email_task") != -1)
+    	{
+            $(this).closest("tr").css('display',"none");
+    	}
+    	
+    });
+    $(".real_name").each(function (index, el) {
+            var jsonstr = $.trim($(this).text());
+            var jsontemp = $.parseJSON(jsonstr);
+            var email_task_name=jsontemp['email_task_name'];
+            console.log(jsontemp['username'])
+            if(username!==jsontemp['username'])
+            {
+                $(this).closest("tr").css('display',"none");
+            }
+            $(this).text(email_task_name);
+            
+
+    });
+
+
+    </script>
+
+
+
+
+    {% endblock %}

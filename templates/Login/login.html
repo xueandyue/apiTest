@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load staticfiles %}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>登录</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="{% static '/cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css' %}">
+    <link href="{% static 'assets/iconfont/style.css' %}" type="text/css" rel="stylesheet">
+    <script src="{% static 'cdn.bootcss.com/jquery/2.1.1/jquery.min.js' %}"></script>
+
+
+
+    <style>
+        body {
+            color: #fff;
+            font-family: "微软雅黑";
+            font-size: 14px;
+        }
+
+        .wrap1 {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto
+        }
+
+        /*把整个屏幕真正撑开--而且能自己实现居中*/
+        .main_content {
+            background-color: white;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+            float: none;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .login_btn {
+            display: block;
+            background: #0499ff;
+            color: #fff;
+            font-size: 15px;
+            width: 100%;
+            line-height: 50px;
+            border-radius: 3px;
+            border: none;
+        }
+
+        .login_input {
+            width: 100%;
+            border: 1px solid #3872f6;
+            border-radius: 3px;
+            line-height: 40px;
+            padding: 2px 5px 2px 30px;
+            background: none;
+        }
+
+        .icon_font {
+            position: absolute;
+            bottom: 15px;
+            left: 10px;
+            font-size: 18px;
+            color: #0499ff;
+        }
+
+        .font16 {
+            font-size: 16px;
+        }
+
+        .mg-t20 {
+            margin-top: 20px;
+        }
+
+        @media (min-width: 200px) {
+            .pd-xs-20 {
+                padding: 20px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .pd-sm-50 {
+                padding: 50px;
+            }
+        }
+
+        #grad {
+            background: -webkit-linear-gradient(#4990c1, #52a3d2, #6186a3);
+            /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(#4990c1, #52a3d2, #6186a3);
+            /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(#4990c1, #52a3d2, #6186a3);
+            /* Firefox 3.6 - 15 */
+            background: linear-gradient(#4990c1, #52a3d2, #6186a3);
+            /* 标准的语法 */
+        }
+    </style>
+    <style>
+        #my-alert1,#my-alertfanhui {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.6rem;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+            position: fixed;
+            z-index: 1110;
+            left: 50%;
+            margin-top: 0;
+            top: 50%;
+            text-align: center;
+            border-radius: 2px;
+            transition-property: transform, opacity;
+            width: 540px;
+            margin-left: -270px;
+            opacity: 1;
+            transition-duration: 300ms;
+            transform: translate3d(0, 0, 0) scale(1);
+            display: block;
+        }
+
+        #my-alert2,#my-alert2fanhui {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.6rem;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            text-align: center;
+            box-sizing: border-box;
+            border-radius: 2px;
+            background: #f8f8f8;
+
+        }
+
+        #my-alert3,#my-alert3fanhui {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            text-align: center;
+            box-sizing: border-box;
+            padding: 15px 10px 5px 10px;
+            font-size: 1.8rem;
+            font-weight: 500;
+
+        }
+
+        #my-alert4,#my-alert4fanhui {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.6rem;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+            padding: 15px 10px;
+            text-align: center;
+            border-bottom: 1px solid #dedede;
+            border-radius: 2px 2px 0 0;
+            padding-top: 0;
+
+        }
+
+        #my-alert5,#my-alert5fanhui {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.6rem;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            text-align: center;
+            box-sizing: border-box;
+            height: 44px;
+            overflow: hidden;
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
+
+        }
+
+        #my-alert6,#my-alert6fanhui {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            border-collapse: collapse;
+            display: table-cell !important;
+            padding: 0 5px;
+            height: 44px;
+            box-sizing: border-box !important;
+            font-size: 1.6rem;
+            line-height: 44px;
+            text-align: center;
+            color: #0e90d2;
+            word-wrap: normal;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            cursor: pointer;
+            border-right: none;
+            border-radius: 0 0 2px 2px;
+
+        }
+
+        #my-alert7 {
+            -webkit-tap-highlight-color: transparent;
+            font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.6rem;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .6);
+            z-index: 10;
+            transition: opacity .15s;
+            opacity: 1;
+            display: block;
+        }
+        .main_content {
+        color: black;
+        }
+        #main{
+            width: 100%;
+    height: 100%;
+    position: absolute;
+    background-size: 100% 100%;
+    background-color:#3c7cfc;
+    top: 0;
+    left: 0;
+    background-repeat: no-repeat;
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+    <div id="main">
+
+    
+
+    <div class="container wrap1" style="height:450px;">
+        <h2 class="mg-b20 text-center">接口测试自动化平台</h2>
+        <div class="col-sm-8 col-md-5 center-auto pd-sm-50 pd-xs-20 main_content">
+            <form action="/Login/login/" role="form" method="POST" id="login_form">
+                <div class="form-group mg-t20">
+                    <i class="icon-user icon_font"></i>
+                    <input type="text" class="login_input" name="account" id="account" placeholder="用户名" />
+                </div>
+                <div class="form-group mg-t20">
+                    <i class="icon-lock icon_font"></i>
+                    <input type="password" class="login_input" name="password" id="password" placeholder="密码" />
+                </div>
+                <div class="checkbox mg-b25" style="text-align: right;;" >
+                    <a  href="/Login/register/"><h4>注册</h4></a>
+                </div>
+                <button class="login_btn" id="login_submit" value="Login" type="submit">登录</button>
+            </form>
+
+        </div>
+        <!--row end-->
+    </div>
+    <!--container end-->
+    <div tabindex="-1" id="my-alert1" style="display: none;">
+        <div id="my-alert2">
+            <div id="my-alert3">接口测试自动化平台</div>
+            <div id="my-alert4">用户名或密码不能为空</div>
+            <div id="my-alert5">
+                <span id="my-alert6">确定</span>
+            </div>
+        </div>
+    </div>
+
+    <div tabindex="-1" id="my-alertfanhui" style="display: none;">
+        <div id="my-alert2fanhui">
+            <div id="my-alert3fanhui">接口测试自动化平台</div>
+            <div id="my-alert4fanhui">登录失败，请检查用户名或者密码</div>
+            <div id="my-alert5fanhui">
+                <span id="my-alert6fanhui">确定</span>
+            </div>
+        </div>
+    </div>
+    
+    <div id="my-alert7" style="display: none;"></div>
+
+    <script>
+
+        function tishi(){
+            $("#my-alertfanhui").show();
+        }
+
+
+        $("#login_submit").click(function (event) {
+            var account = $.trim($("#account").val());
+            var password = $.trim($("#password").val());
+            if (account == "" || password == "") {
+                $("#my-alert7").show();
+                $("#my-alert1").show();
+                return false;
+            }
+            else {
+                $("#account").val(account);
+                $("#password").val(password);
+            }
+
+
+
+        });
+        $("#my-alert6").click(function (e) {
+            $("#my-alert1").hide();
+            $("#my-alert7").hide();
+
+
+        });
+
+        $("#my-alert6fanhui").click(function (e) {
+            $("#my-alertfanhui").hide();
+
+
+        });
+    </script>
+    <script>
+        {{tishi}}
+    </script>
+
+
+
+</div>
+
+</body>
+
+</html>
