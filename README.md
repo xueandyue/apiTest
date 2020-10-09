@@ -66,7 +66,7 @@
 
 
 
-    十、浏览器输入：http://ip地址/Login/login/
+    十、浏览器输入：http://ip地址:端口/Login/login/
 
     十一、如果要提升性能，uwsgi+nginx部署参考：https://www.jianshu.com/p/d6f9138fab7b
     
