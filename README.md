@@ -75,4 +75,4 @@
          群名称：接口自动化平台交流群
         群   号：1044894017
 
-![Image text](https://raw.github.com/yourName/repositpry/master/yourprojectName/img-folder/test.jpg)
+![Image text](https://github.com/xueandyue/apiTest/blob/master/qun.png?raw=true)
