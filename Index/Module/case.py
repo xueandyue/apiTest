@@ -91,7 +91,6 @@ def case_edit(request, id=None):
     :param id:
     :return:
     """
-
     account = request.session["now_account"]
     # 获取userid
     username=request.session["now_account"]
@@ -278,7 +277,7 @@ def case_info_logic(type=True, **kwargs):
         name = test.pop('name')
         # case_type = name['import_type']
         test.setdefault('name', name.pop('case_name'))
-        if 'describe' in test.keys():
+        if 'describe' in name.keys():
             test.setdefault('describe', name.pop('describe'))
         else:
             test.setdefault('describe',"")
