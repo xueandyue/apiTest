@@ -1,4 +1,4 @@
-# apiTest
+# apiTest zhouguliang
 该接口自动化平台是基于对httprunner的封装开发，核心模块是httprunner 2.2.6 ,有支持httprunner的env,api，批量生成用例，报告导出成excel，导入用例或者api，定时执行，账号数据权限独立（看不到别人账号的数据）等功能  用到Django，mysql,jq,bootstrap
 
                 接口测试自动化平台部署
