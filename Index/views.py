@@ -34,7 +34,7 @@ def index(request):
     """
     # 获取userid
     username=request.session["now_account"]
-    sql = 'SELECT id from UserInfo where  username= %s'
+    sql = 'SELECT id from userinfo where  username= %s'
     params = [username]
     helper = Pmysql()
     data = helper.fetchone(sql,params)
@@ -62,7 +62,7 @@ def index(request):
         suite_length = TestSuite.objects.extra(where=["belong_project_id in ("+project_id_list+")"]).count()
 
         #根据userid查project_name
-        sql = 'SELECT project_name FROM UserInfo,ProjectInfo WHERE ProjectInfo.userid=UserInfo.id and UserInfo.id= %s'
+        sql = 'SELECT project_name FROM userinfo,ProjectInfo WHERE ProjectInfo.userid=userinfo.id and userinfo.id= %s'
         params = [userid]
         helper = Pmysql()
         data = helper.fetchall(sql,params)

@@ -34,7 +34,7 @@ def list_report(request, id):
         filter_query = set_filter_session(request)
         # 获取userid
         username=request.session["now_account"]
-        sql = 'SELECT id from UserInfo where  username= %s'
+        sql = 'SELECT id from userinfo where  username= %s'
         params = [username]
         helper = Pmysql()
         data = helper.fetchone(sql,params)

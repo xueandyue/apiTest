@@ -29,7 +29,7 @@ def list_debugtalk(request, id):
     account = request.session["now_account"]
     # 获取userid
     username=request.session["now_account"]
-    sql = 'SELECT id from UserInfo where  username= %s'
+    sql = 'SELECT id from userinfo where  username= %s'
     params = [username]
     helper = Pmysql()
     data = helper.fetchone(sql,params)
@@ -80,7 +80,7 @@ def list_env_file(request, id):
     account = request.session["now_account"]
     # 获取userid
     username=request.session["now_account"]
-    sql = 'SELECT id from UserInfo where  username= %s'
+    sql = 'SELECT id from userinfo where  username= %s'
     params = [username]
     helper = Pmysql()
     data = helper.fetchone(sql,params)

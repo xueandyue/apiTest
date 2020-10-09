@@ -21,7 +21,7 @@ def list_module(request, id):
     account = request.session["now_account"]
     # 获取userid
     username=request.session["now_account"]
-    sql = 'SELECT id from UserInfo where  username= %s'
+    sql = 'SELECT id from userinfo where  username= %s'
     params = [username]
     helper = Pmysql()
     data = helper.fetchone(sql,params)
@@ -62,7 +62,7 @@ def module_add(request):
     account = request.session["now_account"]
     # 获取userid
     username=request.session["now_account"]
-    sql = 'SELECT id from UserInfo where  username= %s'
+    sql = 'SELECT id from userinfo where  username= %s'
     params = [username]
     helper = Pmysql()
     data = helper.fetchone(sql,params)

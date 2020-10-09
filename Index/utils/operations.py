@@ -8,7 +8,7 @@ from django.db import DataError
 
 from Index import separator
 from Index.models import ProjectInfo, ModuleInfo, TestCaseInfo, EnvInfo, TestReports, DebugTalk, TestSuite
-from Login.models import UserInfo
+from Login.models import userinfo
 from httprunner.report import render_html_report
 from Index.Pmysql import Pmysql
 
@@ -22,7 +22,7 @@ def add_register_data(**kwargs):
     :param kwargs: dict
     :return: ok or tips
     """
-    user_info = UserInfo.objects
+    user_info = userinfo.objects
     try:
         username = kwargs.pop('account')
         password = kwargs.pop('password')
@@ -495,7 +495,7 @@ def add_test_reports(runner, report_name=None,username=None):
        pass
     else :
         #查找userid
-        sql = 'SELECT id from UserInfo where  username= %s'
+        sql = 'SELECT id from userinfo where  username= %s'
         params = [username]
         helper = Pmysql()
         data = helper.fetchone(sql,params)

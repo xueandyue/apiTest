@@ -61,7 +61,7 @@ def get_pager_info(Model, filter_query, url, id, per_items=18,userid=0):
             else obj.filter(responsible_name__contains=user).filter(userid=userid)
     elif url == '/Index/test_list/':
         #根据userid查project_name
-        sql = 'SELECT project_name FROM UserInfo,ProjectInfo WHERE ProjectInfo.userid=UserInfo.id and UserInfo.id= %s'
+        sql = 'SELECT project_name FROM userinfo,ProjectInfo WHERE ProjectInfo.userid=userinfo.id and userinfo.id= %s'
         params = [userid]
         helper = Pmysql()
         data = helper.fetchall(sql,params)
@@ -111,7 +111,7 @@ def get_pager_info(Model, filter_query, url, id, per_items=18,userid=0):
         obj=obj.extra(where=["type != 2"])
     elif url == '/Index/config_list/':
         #根据userid查project_name
-        sql = 'SELECT project_name FROM UserInfo,ProjectInfo WHERE ProjectInfo.userid=UserInfo.id and UserInfo.id= %s'
+        sql = 'SELECT project_name FROM userinfo,ProjectInfo WHERE ProjectInfo.userid=userinfo.id and userinfo.id= %s'
         params = [userid]
         helper = Pmysql()
         data = helper.fetchall(sql,params)

@@ -3,7 +3,7 @@ from django.db import models
 '''用户信息操作'''
 
 
-class UserInfoManager(models.Manager):
+class userinfoManager(models.Manager):
     def insert_user(self, username, password, email, object):
         self.create(username=username, password=password, email=email, user_type=object)
 

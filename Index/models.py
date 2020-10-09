@@ -1,7 +1,7 @@
 from django.db import models
 from Login.models import BaseInfo
 from Index.managers import ProjectInfoManager, ModuleInfoManager, TestCaseInfoManager, EnvInfoManager
-from Login.managers import UserInfoManager,UserTypeManager
+from Login.managers import userinfoManager,UserTypeManager
 
 class ProjectInfo(BaseInfo):
     class Meta:
@@ -102,15 +102,15 @@ class ENV(BaseInfo):
     env = models.TextField(null=True, default='')
 
 
-class UserInfo(BaseInfo):
+class userinfo(BaseInfo):
     class Meta:
         verbose_name = '用户信息'
-        db_table = 'UserInfo'
+        db_table = 'userinfo'
     username = models.CharField('用户名', max_length=20, unique=True, null=False)
     password = models.CharField('密码', max_length=20, null=False)
     email = models.EmailField('邮箱', null=False, unique=True)
     status = models.IntegerField('有效/无效', default=1)
-    objects = UserInfoManager()
+    objects = userinfoManager()
 
 
 class UserType(BaseInfo):

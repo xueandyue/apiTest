@@ -2,7 +2,7 @@ from django.shortcuts import render
 import logging,json
 from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import render_to_response
-from Login.models import UserInfo
+from Login.models import userinfo
 from Common.util import init_filter_session
 logger = logging.getLogger('Login')
 
@@ -15,7 +15,7 @@ def login(request):
     if request.method == 'POST':
         username = request.POST.get('account')
         password = request.POST.get('password')
-        if UserInfo.objects.query_user(username, password) == 1:
+        if userinfo.objects.query_user(username, password) == 1:
             logger.info('{username} 登录成功'.format(username=username))
             request.session['login_status'] = True
             request.session['now_account'] = username
@@ -41,14 +41,14 @@ def register(request):
         password = user_info.pop('password')
         email = user_info.pop('email')
         msg = ''
-        if UserInfo.objects.filter(username__exact=username).filter(status=1).count() > 0:
+        if userinfo.objects.filter(username__exact=username).filter(status=1).count() > 0:
             logger.debug('{username} 已被其他用户注册'.format(username=username))
             msg = '该用户名已被注册，请更换用户名'
-        elif UserInfo.objects.filter(email__exact=email).filter(status=1).count() > 0:
+        elif userinfo.objects.filter(email__exact=email).filter(status=1).count() > 0:
             logger.debug('{email} 已被其他用户注册'.format(email=email))
             msg = '邮箱已被其他用户注册，请更换邮箱'
         else:
-            UserInfo.objects.create(username=username, password=password, email=email)
+            userinfo.objects.create(username=username, password=password, email=email)
             logger.info('新增用户：{user_info}'.format(user_info=user_info))
             msg = 'ok'
         return HttpResponse('恭喜您，账号已成功注册' if msg == 'ok' else msg)
